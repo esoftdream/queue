@@ -1,0 +1,23 @@
+parameters:
+	tmpDir: build/phpstan
+	level: 5
+	paths:
+		- src/
+	excludePaths:
+		- src/Commands/
+		- src/Config/Services.php
+		- src/Message/MessageHandler.php
+		- src/Handlers/DatabaseHandler.php
+		- src/Handlers/RedisHandler.php
+		- src/Handlers/PredisHandler.php
+		- src/Handlers/RabbitMQHandler.php
+		- src/Handlers/BaseHandler.php
+		- src/Models/
+		- src/Database/
+	ignoreErrors:
+	    -
+	        message: '#^Call to an undefined method .*::dispatch\(\)\.#'
+	        path: tests/SymfonyMessengerHandlerTest.php
+	universalObjectCratesClasses:
+		- Symfony\Component\Messenger\Envelope
+		- Symfony\Component\Messenger\Message\ReceivedMessage
