@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Esoftdream\Queue\Interfaces;
 
+use Esoftdream\Queue\Entities\QueueJob;
 use Esoftdream\Queue\PayloadMetadata;
-use Esoftdream\Queue\QueueJob;
 use Esoftdream\Queue\QueuePushResult;
 
 interface QueueInterface
@@ -14,7 +14,7 @@ interface QueueInterface
 
     public function push(string $queue, string $job, array $data, ?PayloadMetadata $metadata = null): QueuePushResult;
 
-    public function pop(string $queue, array $priorities): ?QueueJob;
+    public function pop(string $queue, array $priorities = []): ?QueueJob;
 
     public function later(QueueJob $queueJob, int $seconds): bool;
 

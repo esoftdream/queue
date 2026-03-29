@@ -22,6 +22,7 @@
     "homepage": "https://github.com/esoftdream/queue",
     "require": {
         "php": "^8.1",
+        "psr/log": "^1.0|^2.0|^3.0",
         "symfony/messenger": "^6.0|^7.0",
         "symfony/event-dispatcher": "^6.0|^7.0"
     },
@@ -41,10 +42,7 @@
     "autoload": {
         "psr-4": {
             "Esoftdream\\Queue\\": "src"
-        },
-        "exclude-from-classmap": [
-            "**/Database/Migrations/**"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

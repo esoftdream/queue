@@ -9,11 +9,18 @@ use Esoftdream\Queue\Interfaces\JobInterface;
 
 class Queue extends BaseConfig
 {
-    public string $defaultHandler = 'sync';
+    public string $defaultHandler = 'database';
 
-    public array $handlers = [];
+    public array $handlers = [
+        'database' => \Esoftdream\Queue\Handlers\DatabaseHandler::class,
+        'symfony' => \Esoftdream\Queue\Handlers\SymfonyMessengerHandler::class,
+    ];
 
     public array $sync = [];
+
+    public array $database = [
+        'table' => 'queue_jobs',
+    ];
 
     public array $symfonyMessenger = [
         'dsn' => 'sync://',
@@ -32,6 +39,12 @@ class Queue extends BaseConfig
     public array $queuePriorities = [];
 
     public bool $keepFailedJobs = true;
+
+    public int $maxRetries = 3;
+
+    public int $defaultRetryAfter = 60;
+
+    public int $sleepOnFail = 3;
 
     public function __construct()
     {

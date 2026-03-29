@@ -6,8 +6,8 @@ namespace Esoftdream\Queue\Enums;
 
 enum Status: string
 {
-    case PENDING = 'pending';
-    case RESERVED = 'reserved';
-    case DONE = 'done';
-    case FAILED = 'failed';
+    case Waiting = 'waiting';
+    case Reserved = 'reserved';
+    case Done = 'done';
+    case Failed = 'failed';
 }
