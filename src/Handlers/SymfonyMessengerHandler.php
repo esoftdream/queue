@@ -11,12 +11,13 @@ use Esoftdream\Queue\Message\MessageHandler;
 use Esoftdream\Queue\Message\SymfonyQueueMessage;
 use Esoftdream\Queue\PayloadMetadata;
 use Esoftdream\Queue\Payloads\Payload;
-use Esoftdream\Queue\QueueJob as QueueJobEntity;
+use Esoftdream\Queue\Entities\QueueJob as QueueJobEntity;
 use Esoftdream\Queue\QueuePushResult;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Handler\HandlersLocator;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Component\Messenger\Stamp\TransportNamesStamp;
@@ -72,7 +73,7 @@ class SymfonyMessengerHandler implements QueueInterface
         }
     }
 
-    public function pop(string $queue, array $priorities): ?QueueJobEntity
+    public function pop(string $queue, array $priorities = []): ?QueueJobEntity
     {
         return null;
     }
@@ -239,8 +240,12 @@ class SymfonyMessengerHandler implements QueueInterface
     {
         $this->messageHandler = new MessageHandler($this->config, $this->logger);
 
+        $handlersLocator = new HandlersLocator([
+            SymfonyQueueMessage::class => [$this->messageHandler],
+        ]);
+
         return new MessageBus([
-            new HandleMessageMiddleware($this->messageHandler),
+            new HandleMessageMiddleware($handlersLocator),
         ]);
     }
 

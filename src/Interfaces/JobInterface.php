@@ -13,4 +13,8 @@ interface JobInterface
     public function getTries(): int;
 
     public function getData(): array;
+
+    public function setData(array $data): void;
+
+    public function execute(): void;
 }

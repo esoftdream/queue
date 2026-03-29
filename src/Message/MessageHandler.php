@@ -7,12 +7,10 @@ namespace Esoftdream\Queue\Message;
 use Esoftdream\Queue\Config\Queue as QueueConfig;
 use Esoftdream\Queue\Interfaces\JobInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-#[AsMessageHandler]
 class MessageHandler implements MessageHandlerInterface
 {
     private ?MessageBusInterface $messageBus = null;
@@ -31,11 +29,8 @@ class MessageHandler implements MessageHandlerInterface
             throw new \RuntimeException("Job class '{$jobClass}' not found.");
         }
 
+        /** @var JobInterface $job */
         $job = new $jobClass();
-
-        if (!$job instanceof JobInterface) {
-            throw new \RuntimeException("Job class '{$jobClass}' must implement " . JobInterface::class);
-        }
 
         $this->logger?->info("Processing job: {$message->job}", [
             'queue' => $message->getQueue(),

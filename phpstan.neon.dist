@@ -5,6 +5,7 @@ parameters:
 		- src/
 	excludePaths:
 		- src/Commands/
+		- src/Config/Services.php
 		- src/Handlers/DatabaseHandler.php
 		- src/Handlers/RedisHandler.php
 		- src/Handlers/PredisHandler.php
@@ -16,6 +17,9 @@ parameters:
 	    -
 	        message: '#^Call to an undefined method .*::dispatch\(\)\.#'
 	        path: tests/SymfonyMessengerHandlerTest.php
+	    -
+	        message: '#implements deprecated interface Symfony\\Component\\Messenger\\Handler\\MessageHandlerInterface#'
+	        path: src/Message/MessageHandler.php
 	universalObjectCratesClasses:
 		- Symfony\Component\Messenger\Envelope
 		- Symfony\Component\Messenger\Message\ReceivedMessage
