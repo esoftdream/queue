@@ -10,7 +10,8 @@ class QueuePushResult
         public readonly bool $isSuccess,
         public readonly ?string $jobId = null,
         public readonly ?string $error = null
-    ) {}
+    ) {
+    }
 
     public static function success(string|int $jobId): self
     {

@@ -10,7 +10,8 @@ class Payload
         public readonly string $job,
         public readonly array $data = [],
         public readonly ?array $metadata = null
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

@@ -20,7 +20,8 @@ class MessageHandler implements MessageHandlerInterface
     public function __construct(
         protected QueueConfig $config,
         protected ?LoggerInterface $logger = null
-    ) {}
+    ) {
+    }
 
     public function __invoke(SymfonyQueueMessage $message): void
     {

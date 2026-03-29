@@ -18,34 +18,40 @@ class SymfonyMessengerHandlerTest extends TestCase
     {
         parent::setUp();
 
-        $this->busMock = new class {
+        $this->busMock = new class () {
             public array $dispatched = [];
-            public function dispatch($message) {
+            public function dispatch($message)
+            {
                 $this->dispatched[] = $message;
-                return new class {
-                    public function get(): array { return []; }
+                return new class () {
+                    public function get(): array
+                    {
+                        return [];
+                    }
                 };
             }
-            public function shouldThrow(bool $throw) {
+            public function shouldThrow(bool $throw)
+            {
                 $this->shouldThrow = $throw;
                 return $this;
             }
         };
 
-        $this->configMock = new class {
+        $this->configMock = new class () {
             public string $transport = 'sync';
             public string $defaultQueue = 'default';
             public array $symfonyMessengerConfig = [];
         };
 
-        $this->handler = new class($this->busMock, $this->configMock) {
+        $this->handler = new class ($this->busMock, $this->configMock) {
             public array $messages = [];
             public ?\Throwable $shouldThrow = null;
 
             public function __construct(
                 public object $bus,
                 public object $config
-            ) {}
+            ) {
+            }
 
             public function push(Payload $payload): QueuePushResult
             {

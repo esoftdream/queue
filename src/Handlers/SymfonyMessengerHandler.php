@@ -33,7 +33,8 @@ class SymfonyMessengerHandler implements QueueInterface
     public function __construct(
         protected QueueConfig $config,
         protected ?LoggerInterface $logger = null
-    ) {}
+    ) {
+    }
 
     public function name(): string
     {

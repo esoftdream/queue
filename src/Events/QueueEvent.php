@@ -13,7 +13,8 @@ class QueueEvent
         public readonly string $handler,
         public readonly ?string $queue = null,
         public readonly array $metadata = [],
-    ) {}
+    ) {
+    }
 
     public function get(string $key, mixed $default = null): mixed
     {

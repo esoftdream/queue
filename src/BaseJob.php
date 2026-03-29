@@ -11,7 +11,8 @@ abstract class BaseJob
 
     public function __construct(
         protected array $data = []
-    ) {}
+    ) {
+    }
 
     abstract public function process(): void;
 

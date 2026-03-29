@@ -25,7 +25,8 @@ class QueueJob
         public ?\DateTimeInterface $failed_at = null,
         public ?int $priority = null,
         public ?string $available_at = null,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

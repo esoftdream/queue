@@ -10,8 +10,10 @@ class BaseJobTest extends TestCase
 {
     public function testGetRetryAfter(): void
     {
-        $job = new class(['data' => 'value']) extends BaseJob {
-            public function process(): void {}
+        $job = new class (['data' => 'value']) extends BaseJob {
+            public function process(): void
+            {
+            }
         };
 
         $this->assertEquals(60, $job->getRetryAfter());
@@ -19,8 +21,10 @@ class BaseJobTest extends TestCase
 
     public function testGetTries(): void
     {
-        $job = new class(['data' => 'value']) extends BaseJob {
-            public function process(): void {}
+        $job = new class (['data' => 'value']) extends BaseJob {
+            public function process(): void
+            {
+            }
         };
 
         $this->assertEquals(1, $job->getTries());
@@ -29,8 +33,10 @@ class BaseJobTest extends TestCase
     public function testGetData(): void
     {
         $data = ['key' => 'value'];
-        $job = new class($data) extends BaseJob {
-            public function process(): void {}
+        $job = new class ($data) extends BaseJob {
+            public function process(): void
+            {
+            }
         };
 
         $this->assertEquals($data, $job->getData());
@@ -38,8 +44,10 @@ class BaseJobTest extends TestCase
 
     public function testSetData(): void
     {
-        $job = new class([]) extends BaseJob {
-            public function process(): void {}
+        $job = new class ([]) extends BaseJob {
+            public function process(): void
+            {
+            }
         };
 
         $job->setData(['new' => 'data']);
@@ -62,8 +70,10 @@ class BaseJobTest extends TestCase
     public function testConstructorSetsData(): void
     {
         $data = ['foo' => 'bar'];
-        $job = new class($data) extends BaseJob {
-            public function process(): void {}
+        $job = new class ($data) extends BaseJob {
+            public function process(): void
+            {
+            }
         };
 
         $this->assertEquals($data, $job->getData());
@@ -71,8 +81,10 @@ class BaseJobTest extends TestCase
 
     public function testDefaultDataIsEmptyArray(): void
     {
-        $job = new class extends BaseJob {
-            public function process(): void {}
+        $job = new class () extends BaseJob {
+            public function process(): void
+            {
+            }
         };
 
         $this->assertEquals([], $job->getData());

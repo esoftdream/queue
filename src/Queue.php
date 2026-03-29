@@ -20,7 +20,7 @@ class Queue
     public function init(): QueueInterface
     {
         $handlerClass = $this->config->handlers[$this->config->defaultHandler];
-        
+
         return new $handlerClass($this->config);
     }
 
