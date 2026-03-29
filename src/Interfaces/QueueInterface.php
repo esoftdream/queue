@@ -11,12 +11,12 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Interfaces;
+namespace Esoftdream\Queue\Interfaces;
 
 use Closure;
-use CodeIgniter\Queue\Entities\QueueJob;
-use CodeIgniter\Queue\Payloads\PayloadMetadata;
-use CodeIgniter\Queue\QueuePushResult;
+use Esoftdream\Queue\Entities\QueueJob;
+use Esoftdream\Queue\Payloads\PayloadMetadata;
+use Esoftdream\Queue\QueuePushResult;
 use Throwable;
 
 interface QueueInterface

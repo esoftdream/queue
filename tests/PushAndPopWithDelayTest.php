@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use CodeIgniter\I18n\Time;
-use CodeIgniter\Queue\Entities\QueueJob;
+use Esoftdream\Queue\Entities\QueueJob;
 use CodeIgniter\Test\ReflectionHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\Config\Queue as QueueConfig;
@@ -88,15 +88,15 @@ final class PushAndPopWithDelayTest extends TestCase
         return [
             [
                 'database',                                   // name
-                'CodeIgniter\Queue\Handlers\DatabaseHandler', // class
+                'Esoftdream\Queue\Handlers\DatabaseHandler', // class
             ],
             [
                 'redis',
-                'CodeIgniter\Queue\Handlers\RedisHandler',
+                'Esoftdream\Queue\Handlers\RedisHandler',
             ],
             [
                 'predis',
-                'CodeIgniter\Queue\Handlers\PredisHandler',
+                'Esoftdream\Queue\Handlers\PredisHandler',
             ],
         ];
     }

@@ -11,10 +11,10 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Payloads;
+namespace Esoftdream\Queue\Payloads;
 
-use CodeIgniter\Queue\Handlers\BaseHandler;
-use CodeIgniter\Queue\QueuePushResult;
+use Esoftdream\Queue\Handlers\BaseHandler;
+use Esoftdream\Queue\QueuePushResult;
 
 class ChainBuilder
 {

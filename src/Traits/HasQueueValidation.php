@@ -11,9 +11,9 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Traits;
+namespace Esoftdream\Queue\Traits;
 
-use CodeIgniter\Queue\Exceptions\QueueException;
+use Esoftdream\Queue\Exceptions\QueueException;
 
 trait HasQueueValidation
 {

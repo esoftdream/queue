@@ -11,12 +11,12 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Config;
+namespace Esoftdream\Queue\Config;
 
 use CodeIgniter\Config\BaseService;
-use CodeIgniter\Queue\Config\Queue as QueueConfig;
-use CodeIgniter\Queue\Interfaces\QueueInterface;
-use CodeIgniter\Queue\Queue;
+use Esoftdream\Queue\Config\Queue as QueueConfig;
+use Esoftdream\Queue\Interfaces\QueueInterface;
+use Esoftdream\Queue\Queue;
 
 class Services extends BaseService
 {

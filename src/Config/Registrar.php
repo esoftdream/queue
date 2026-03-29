@@ -11,7 +11,7 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Config;
+namespace Esoftdream\Queue\Config;
 
 class Registrar
 {
@@ -19,7 +19,7 @@ class Registrar
     {
         return [
             'views' => [
-                'queue:job' => 'CodeIgniter\Queue\Commands\Generators\Views\job.tpl.php',
+                'queue:job' => 'Esoftdream\Queue\Commands\Generators\Views\job.tpl.php',
             ],
         ];
     }

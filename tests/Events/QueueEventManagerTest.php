@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Tests\Events;
 
 use CodeIgniter\Events\Events;
-use CodeIgniter\Queue\Entities\QueueJob;
-use CodeIgniter\Queue\Events\QueueEvent;
-use CodeIgniter\Queue\Events\QueueEventManager;
-use CodeIgniter\Queue\Payloads\Payload;
+use Esoftdream\Queue\Entities\QueueJob;
+use Esoftdream\Queue\Events\QueueEvent;
+use Esoftdream\Queue\Events\QueueEventManager;
+use Esoftdream\Queue\Payloads\Payload;
 use Exception;
 use Tests\Support\TestCase;
 

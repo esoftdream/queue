@@ -11,11 +11,11 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue;
+namespace Esoftdream\Queue;
 
-use CodeIgniter\Queue\Config\Queue as QueueConfig;
-use CodeIgniter\Queue\Exceptions\QueueException;
-use CodeIgniter\Queue\Interfaces\QueueInterface;
+use Esoftdream\Queue\Config\Queue as QueueConfig;
+use Esoftdream\Queue\Exceptions\QueueException;
+use Esoftdream\Queue\Interfaces\QueueInterface;
 
 class Queue
 {

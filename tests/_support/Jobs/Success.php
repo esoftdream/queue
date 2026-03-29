@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Tests\Support\Jobs;
 
-use CodeIgniter\Queue\BaseJob;
+use Esoftdream\Queue\BaseJob;
 
 class Success extends BaseJob
 {

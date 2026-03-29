@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Tests\Events;
 
 use CodeIgniter\I18n\Time;
-use CodeIgniter\Queue\Entities\QueueJob;
-use CodeIgniter\Queue\Events\QueueEvent;
+use Esoftdream\Queue\Entities\QueueJob;
+use Esoftdream\Queue\Events\QueueEvent;
 use Exception;
 use Tests\Support\TestCase;
 

@@ -11,7 +11,7 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Database\Migrations;
+namespace Esoftdream\Queue\Database\Migrations;
 
 use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Database\Migration;

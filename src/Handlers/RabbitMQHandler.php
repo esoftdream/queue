@@ -11,18 +11,18 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Handlers;
+namespace Esoftdream\Queue\Handlers;
 
 use CodeIgniter\Exceptions\CriticalError;
 use CodeIgniter\I18n\Time;
-use CodeIgniter\Queue\Config\Queue as QueueConfig;
-use CodeIgniter\Queue\Entities\QueueJob;
-use CodeIgniter\Queue\Enums\Status;
-use CodeIgniter\Queue\Events\QueueEventManager;
-use CodeIgniter\Queue\Exceptions\QueueException;
-use CodeIgniter\Queue\Payloads\Payload;
-use CodeIgniter\Queue\Payloads\PayloadMetadata;
-use CodeIgniter\Queue\QueuePushResult;
+use Esoftdream\Queue\Config\Queue as QueueConfig;
+use Esoftdream\Queue\Entities\QueueJob;
+use Esoftdream\Queue\Enums\Status;
+use Esoftdream\Queue\Events\QueueEventManager;
+use Esoftdream\Queue\Exceptions\QueueException;
+use Esoftdream\Queue\Payloads\Payload;
+use Esoftdream\Queue\Payloads\PayloadMetadata;
+use Esoftdream\Queue\QueuePushResult;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Connection\AMQPConnectionConfig;

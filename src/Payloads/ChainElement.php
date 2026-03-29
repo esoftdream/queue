@@ -11,7 +11,7 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Payloads;
+namespace Esoftdream\Queue\Payloads;
 
 class ChainElement
 {

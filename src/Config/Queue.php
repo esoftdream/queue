@@ -11,16 +11,16 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Config;
+namespace Esoftdream\Queue\Config;
 
 use CodeIgniter\Config\BaseConfig;
-use CodeIgniter\Queue\Exceptions\QueueException;
-use CodeIgniter\Queue\Handlers\DatabaseHandler;
-use CodeIgniter\Queue\Handlers\PredisHandler;
-use CodeIgniter\Queue\Handlers\RabbitMQHandler;
-use CodeIgniter\Queue\Handlers\RedisHandler;
-use CodeIgniter\Queue\Interfaces\JobInterface;
-use CodeIgniter\Queue\Interfaces\QueueInterface;
+use Esoftdream\Queue\Exceptions\QueueException;
+use Esoftdream\Queue\Handlers\DatabaseHandler;
+use Esoftdream\Queue\Handlers\PredisHandler;
+use Esoftdream\Queue\Handlers\RabbitMQHandler;
+use Esoftdream\Queue\Handlers\RedisHandler;
+use Esoftdream\Queue\Interfaces\JobInterface;
+use Esoftdream\Queue\Interfaces\QueueInterface;
 
 class Queue extends BaseConfig
 {

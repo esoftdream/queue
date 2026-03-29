@@ -11,7 +11,7 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Entities;
+namespace Esoftdream\Queue\Entities;
 
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\I18n\Time;

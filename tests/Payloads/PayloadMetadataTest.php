@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Tests\Payloads;
 
-use CodeIgniter\Queue\Payloads\Payload;
-use CodeIgniter\Queue\Payloads\PayloadCollection;
-use CodeIgniter\Queue\Payloads\PayloadMetadata;
+use Esoftdream\Queue\Payloads\Payload;
+use Esoftdream\Queue\Payloads\PayloadCollection;
+use Esoftdream\Queue\Payloads\PayloadMetadata;
 use Tests\Support\TestCase;
 
 /**

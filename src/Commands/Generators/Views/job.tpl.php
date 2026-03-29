@@ -2,7 +2,7 @@
 
 namespace {namespace};
 
-use CodeIgniter\Queue\BaseJob;
+use Esoftdream\Queue\BaseJob;
 
 class {class} extends BaseJob
 {

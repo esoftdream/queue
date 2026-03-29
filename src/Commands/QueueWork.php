@@ -11,15 +11,15 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Commands;
+namespace Esoftdream\Queue\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
-use CodeIgniter\Queue\Compatibility\SignalTrait;
-use CodeIgniter\Queue\Config\Queue as QueueConfig;
-use CodeIgniter\Queue\Entities\QueueJob;
-use CodeIgniter\Queue\Events\QueueEventManager;
-use CodeIgniter\Queue\Payloads\PayloadMetadata;
+use Esoftdream\Queue\Compatibility\SignalTrait;
+use Esoftdream\Queue\Config\Queue as QueueConfig;
+use Esoftdream\Queue\Entities\QueueJob;
+use Esoftdream\Queue\Events\QueueEventManager;
+use Esoftdream\Queue\Payloads\PayloadMetadata;
 use Exception;
 use Throwable;
 

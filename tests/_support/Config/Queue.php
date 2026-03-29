@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Tests\Support\Config;
 
-use CodeIgniter\Queue\Config\Queue as BaseQueue;
-use CodeIgniter\Queue\Handlers\DatabaseHandler;
-use CodeIgniter\Queue\Handlers\PredisHandler;
-use CodeIgniter\Queue\Handlers\RabbitMQHandler;
-use CodeIgniter\Queue\Handlers\RedisHandler;
+use Esoftdream\Queue\Config\Queue as BaseQueue;
+use Esoftdream\Queue\Handlers\DatabaseHandler;
+use Esoftdream\Queue\Handlers\PredisHandler;
+use Esoftdream\Queue\Handlers\RabbitMQHandler;
+use Esoftdream\Queue\Handlers\RedisHandler;
 use Tests\Support\Jobs\Failure;
 use Tests\Support\Jobs\Success;
 

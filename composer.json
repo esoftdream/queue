@@ -1,9 +1,16 @@
 {
-    "name": "codeigniter4/queue",
-    "description": "Queues for CodeIgniter 4 framework",
+    "name": "esoftdream/queue",
+    "description": "Queues for CodeIgniter 4 framework - Esoftdream custom version",
     "license": "MIT",
     "type": "library",
-    "keywords": ["codeigniter", "codeigniter4", "queue", "database", "redis", "predis"],
+    "keywords": [
+        "codeigniter",
+        "codeigniter4",
+        "queue",
+        "database",
+        "redis",
+        "predis"
+    ],
     "authors": [
         {
             "name": "michalsn",
@@ -26,7 +33,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "CodeIgniter\\Queue\\": "src"
+            "Esoftdream\\Queue\\": "src"
         },
         "exclude-from-classmap": [
             "**/Database/Migrations/**"

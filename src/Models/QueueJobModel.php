@@ -11,15 +11,15 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Models;
+namespace Esoftdream\Queue\Models;
 
 use CodeIgniter\Database\BaseBuilder;
 use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Model;
-use CodeIgniter\Queue\Entities\QueueJob;
-use CodeIgniter\Queue\Enums\Status;
+use Esoftdream\Queue\Entities\QueueJob;
+use Esoftdream\Queue\Enums\Status;
 use CodeIgniter\Validation\ValidationInterface;
 use Config\Database;
 use ReflectionException;

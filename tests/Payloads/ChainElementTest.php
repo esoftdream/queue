@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Tests\Payloads;
 
-use CodeIgniter\Queue\Payloads\ChainBuilder;
-use CodeIgniter\Queue\Payloads\ChainElement;
-use CodeIgniter\Queue\Payloads\Payload;
-use CodeIgniter\Queue\Payloads\PayloadMetadata;
+use Esoftdream\Queue\Payloads\ChainBuilder;
+use Esoftdream\Queue\Payloads\ChainElement;
+use Esoftdream\Queue\Payloads\Payload;
+use Esoftdream\Queue\Payloads\PayloadMetadata;
 use Tests\Support\TestCase;
 
 /**

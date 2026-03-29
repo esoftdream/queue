@@ -16,7 +16,7 @@ namespace Tests\Commands;
 use CodeIgniter\Cache\CacheInterface;
 use CodeIgniter\Config\Services;
 use CodeIgniter\I18n\Time;
-use CodeIgniter\Queue\Models\QueueJobModel;
+use Esoftdream\Queue\Models\QueueJobModel;
 use CodeIgniter\Test\Filters\CITestStreamFilter;
 use Tests\Support\CLITestCase;
 

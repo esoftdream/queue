@@ -11,20 +11,20 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Handlers;
+namespace Esoftdream\Queue\Handlers;
 
 use Closure;
 use CodeIgniter\I18n\Time;
-use CodeIgniter\Queue\Config\Queue as QueueConfig;
-use CodeIgniter\Queue\Entities\QueueJob;
-use CodeIgniter\Queue\Entities\QueueJobFailed;
-use CodeIgniter\Queue\Exceptions\QueueException;
-use CodeIgniter\Queue\Interfaces\QueueInterface;
-use CodeIgniter\Queue\Models\QueueJobFailedModel;
-use CodeIgniter\Queue\Payloads\ChainBuilder;
-use CodeIgniter\Queue\Payloads\PayloadMetadata;
-use CodeIgniter\Queue\QueuePushResult;
-use CodeIgniter\Queue\Traits\HasQueueValidation;
+use Esoftdream\Queue\Config\Queue as QueueConfig;
+use Esoftdream\Queue\Entities\QueueJob;
+use Esoftdream\Queue\Entities\QueueJobFailed;
+use Esoftdream\Queue\Exceptions\QueueException;
+use Esoftdream\Queue\Interfaces\QueueInterface;
+use Esoftdream\Queue\Models\QueueJobFailedModel;
+use Esoftdream\Queue\Payloads\ChainBuilder;
+use Esoftdream\Queue\Payloads\PayloadMetadata;
+use Esoftdream\Queue\QueuePushResult;
+use Esoftdream\Queue\Traits\HasQueueValidation;
 use ReflectionException;
 use Throwable;
 

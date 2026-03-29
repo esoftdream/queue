@@ -11,10 +11,10 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue\Payloads;
+namespace Esoftdream\Queue\Payloads;
 
-use CodeIgniter\Queue\Exceptions\QueueException;
-use CodeIgniter\Queue\Traits\HasQueueValidation;
+use Esoftdream\Queue\Exceptions\QueueException;
+use Esoftdream\Queue\Traits\HasQueueValidation;
 use JsonSerializable;
 
 class Payload implements JsonSerializable

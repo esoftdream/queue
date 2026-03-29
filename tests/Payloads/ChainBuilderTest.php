@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Tests\Payloads;
 
 use CodeIgniter\I18n\Time;
-use CodeIgniter\Queue\Handlers\DatabaseHandler;
-use CodeIgniter\Queue\Payloads\ChainBuilder;
-use CodeIgniter\Queue\Payloads\ChainElement;
+use Esoftdream\Queue\Handlers\DatabaseHandler;
+use Esoftdream\Queue\Payloads\ChainBuilder;
+use Esoftdream\Queue\Payloads\ChainElement;
 use Tests\Support\Config\Queue as QueueConfig;
 use Tests\Support\Database\Seeds\TestDatabaseQueueSeeder;
 use Tests\Support\TestCase;

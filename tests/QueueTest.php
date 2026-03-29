@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use CodeIgniter\Queue\Exceptions\QueueException;
-use CodeIgniter\Queue\Handlers\DatabaseHandler;
-use CodeIgniter\Queue\Queue;
+use Esoftdream\Queue\Exceptions\QueueException;
+use Esoftdream\Queue\Handlers\DatabaseHandler;
+use Esoftdream\Queue\Queue;
 use Tests\Support\Config\Queue as QueueConfig;
 use Tests\Support\Database\Seeds\TestDatabaseQueueSeeder;
 use Tests\Support\TestCase;

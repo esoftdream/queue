@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use CodeIgniter\Queue\QueuePushResult;
+use Esoftdream\Queue\QueuePushResult;
 use Tests\Support\TestCase;
 
 /**

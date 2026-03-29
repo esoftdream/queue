@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Tests\Payloads;
 
 use ArrayIterator;
-use CodeIgniter\Queue\Payloads\Payload;
-use CodeIgniter\Queue\Payloads\PayloadCollection;
+use Esoftdream\Queue\Payloads\Payload;
+use Esoftdream\Queue\Payloads\PayloadCollection;
 use Tests\Support\TestCase;
 
 /**

@@ -15,10 +15,10 @@ namespace Tests\Support\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 use CodeIgniter\Exceptions\CriticalError;
-use CodeIgniter\Queue\Entities\QueueJob;
-use CodeIgniter\Queue\Entities\QueueJobFailed;
-use CodeIgniter\Queue\Enums\Status;
-use CodeIgniter\Queue\Models\QueueJobFailedModel;
+use Esoftdream\Queue\Entities\QueueJob;
+use Esoftdream\Queue\Entities\QueueJobFailed;
+use Esoftdream\Queue\Enums\Status;
+use Esoftdream\Queue\Models\QueueJobFailedModel;
 use Redis;
 use RedisException;
 use ReflectionException;

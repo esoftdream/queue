@@ -11,9 +11,9 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace CodeIgniter\Queue;
+namespace Esoftdream\Queue;
 
-use CodeIgniter\Queue\Interfaces\JobInterface;
+use Esoftdream\Queue\Interfaces\JobInterface;
 
 abstract class BaseJob implements JobInterface
 {
