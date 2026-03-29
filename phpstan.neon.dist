@@ -18,7 +18,10 @@ parameters:
 	        message: '#^Call to an undefined method .*::dispatch\(\)\.#'
 	        path: tests/SymfonyMessengerHandlerTest.php
 	    -
-	        message: '#since Symfony 6\.2, use the \{@see AsMessageHandler\} attribute instead#'
+	        message: '#implements deprecated interface#'
+	        path: src/Message/MessageHandler.php
+	    -
+	        message: '#implements unknown interface#'
 	        path: src/Message/MessageHandler.php
 	universalObjectCratesClasses:
 		- Symfony\Component\Messenger\Envelope
