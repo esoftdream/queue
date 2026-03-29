@@ -29,8 +29,8 @@
     "require-dev": {
         "phpunit/phpunit": "^10.0",
         "phpstan/phpstan": "^1.10",
-        "friendsofphp/php-cs-fixer": "^3.0",
-        "codeigniter4/framework": "^4.6"
+        "codeigniter4/framework": "^4.6",
+        "codeigniter4/devkit": "^1.2"
     },
     "suggest": {
         "symfony/amqp-messenger": "For AMQP transport (RabbitMQ)",
