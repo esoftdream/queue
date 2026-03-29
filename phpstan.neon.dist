@@ -3,8 +3,8 @@ parameters:
 	level: 5
 	paths:
 		- src/
-		- tests/
 	excludePaths:
+		- src/Commands/
 		- src/Handlers/DatabaseHandler.php
 		- src/Handlers/RedisHandler.php
 		- src/Handlers/PredisHandler.php

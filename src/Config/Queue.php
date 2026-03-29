@@ -50,7 +50,8 @@ class Queue extends BaseConfig
     {
         parent::__construct();
 
-        if (ENVIRONMENT === 'testing') {
+        $env = defined('ENVIRONMENT') ? ENVIRONMENT : 'production';
+        if ($env === 'testing') {
             $this->symfonyMessenger['dsn'] = 'sync://';
         }
     }
