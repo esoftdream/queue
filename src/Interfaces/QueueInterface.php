@@ -2,48 +2,43 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of CodeIgniter Queue.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Esoftdream\Queue\Interfaces;
 
-use Closure;
-use Esoftdream\Queue\Entities\QueueJob;
-use Esoftdream\Queue\Payloads\PayloadMetadata;
+use Esoftdream\Queue\PayloadMetadata;
+use Esoftdream\Queue\QueueJob;
 use Esoftdream\Queue\QueuePushResult;
-use Throwable;
 
 interface QueueInterface
 {
+    public function name(): string;
+
     public function push(string $queue, string $job, array $data, ?PayloadMetadata $metadata = null): QueuePushResult;
 
     public function pop(string $queue, array $priorities): ?QueueJob;
 
     public function later(QueueJob $queueJob, int $seconds): bool;
 
-    public function failed(QueueJob $queueJob, Throwable $err, bool $keepJob): bool;
+    public function failed(QueueJob $queueJob, \Throwable $err, bool $keepJob = true): bool;
 
     public function done(QueueJob $queueJob): bool;
 
     public function clear(?string $queue = null): bool;
 
-    public function retry(?int $id, ?string $queue): int;
+    public function getQueues(): array;
+
+    public function priority(int $priority): self;
+
+    public function delay(int $delay): self;
+
+    public function setPriority(int $priority): self;
+
+    public function setDelay(int $delay): self;
+
+    public function listFailed(?string $queue = null): array;
+
+    public function retry(?int $id, ?string $queue = null): int;
 
     public function forget(int $id): bool;
 
-    public function flush(?int $hours, ?string $queue): bool;
-
-    public function listFailed(?string $queue): array;
-
-    public function setDelay(int $delay): static;
-
-    public function setPriority(string $priority): static;
-
-    public function chain(Closure $callback): QueuePushResult;
+    public function flush(?int $hours = null, ?string $queue = null): void;
 }

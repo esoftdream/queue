@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of CodeIgniter Queue.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Esoftdream\Queue\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
@@ -26,7 +17,7 @@ class QueuePublish extends BaseCommand
 
     public function run(array $params): void
     {
-        $source = service('autoloader')->getNamespace('CodeIgniter\\Queue')[0];
+        $source = service('autoloader')->getNamespace('Esoftdream\\Queue')[0];
 
         $publisher = new Publisher($source, APPPATH);
 
@@ -42,8 +33,8 @@ class QueuePublish extends BaseCommand
 
         foreach ($publisher->getPublished() as $file) {
             $contents = file_get_contents($file);
-            $contents = str_replace('namespace CodeIgniter\\Queue\\Config', 'namespace Config', $contents);
-            $contents = str_replace('use CodeIgniter\\Config\\BaseConfig', 'use CodeIgniter\\Queue\\Config\\Queue as BaseQueue', $contents);
+            $contents = str_replace('namespace Esoftdream\\Queue\\Config', 'namespace Config', $contents);
+            $contents = str_replace('use CodeIgniter\\Config\\BaseConfig', 'use Esoftdream\\Queue\\Config\\Queue as BaseQueue', $contents);
             $contents = str_replace('class Queue extends BaseConfig', 'class Queue extends BaseQueue', $contents);
             $method   = <<<'EOT'
 

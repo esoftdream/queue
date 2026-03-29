@@ -2,32 +2,18 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of CodeIgniter Queue.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Esoftdream\Queue;
 
-use Esoftdream\Queue\Interfaces\JobInterface;
-
-abstract class BaseJob implements JobInterface
+abstract class BaseJob
 {
-    // Retry job after X seconds
     protected int $retryAfter = 60;
-
-    // Number of tries
     protected int $tries = 1;
 
-    public function __construct(protected array $data)
-    {
-    }
+    public function __construct(
+        protected array $data = []
+    ) {}
 
-    abstract public function process();
+    abstract public function process(): void;
 
     public function getRetryAfter(): int
     {
@@ -37,5 +23,20 @@ abstract class BaseJob implements JobInterface
     public function getTries(): int
     {
         return $this->tries;
+    }
+
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    public function setData(array $data): void
+    {
+        $this->data = $data;
+    }
+
+    public function execute(): void
+    {
+        $this->process();
     }
 }

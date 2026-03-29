@@ -2,63 +2,37 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of CodeIgniter Queue.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Esoftdream\Queue\Exceptions;
 
-use RuntimeException;
-
-final class QueueException extends RuntimeException
+class QueueException extends \RuntimeException
 {
-    public static function forIncorrectHandler(): static
+    public static function forIncorrectHandler(): self
     {
-        return new self(lang('Queue.incorrectHandler'));
+        return new self('Incorrect handler name.');
     }
 
-    public static function forIncorrectQueueFormat(): static
+    public static function forIncorrectJobHandler(): self
     {
-        return new self(lang('Queue.incorrectQueueFormat'));
+        return new self('Incorrect job handler name.');
     }
 
-    public static function forTooLongQueueName(): static
+    public static function forIncorrectQueue(): self
     {
-        return new self(lang('Queue.tooLongQueueName'));
+        return new self('Incorrect queue name.');
     }
 
-    public static function forIncorrectJobHandler(): static
+    public static function forIncorrectPriority(): self
     {
-        return new self(lang('Queue.incorrectJobHandler'));
+        return new self('Incorrect priority value.');
     }
 
-    public static function forIncorrectPriorityFormat(): static
+    public static function forHandlerNotAvailable(string $handler): self
     {
-        return new self(lang('Queue.incorrectPriorityFormat'));
+        return new self("Handler '{$handler}' is not available.");
     }
 
-    public static function forTooLongPriorityName(): static
+    public static function forJobFailed(string $message): self
     {
-        return new self(lang('Queue.tooLongPriorityName'));
-    }
-
-    public static function forIncorrectQueuePriority(string $priority, string $queue): static
-    {
-        return new self(lang('Queue.incorrectQueuePriority', [$priority, $queue]));
-    }
-
-    public static function forIncorrectDelayValue(): static
-    {
-        return new self(lang('Queue.incorrectDelayValue'));
-    }
-
-    public static function forFailedJsonEncode(string $error): static
-    {
-        return new self(lang('Queue.failedToJsonEncode', [$error]));
+        return new self("Job failed: {$message}");
     }
 }

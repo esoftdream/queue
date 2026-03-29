@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Esoftdream\Queue\Interfaces;
+namespace Esoftdream\Queue;
 
 interface JobInterface
 {

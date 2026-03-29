@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of CodeIgniter Queue.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Esoftdream\Queue\Events;
 
 use CodeIgniter\Events\Events;
@@ -19,7 +10,6 @@ use Throwable;
 
 class QueueEventManager
 {
-    // Event names for queue operations
     public const JOB_PUSHED                     = 'queue.job.pushed';
     public const JOB_PUSH_FAILED                = 'queue.job.push.failed';
     public const JOB_PROCESSING_STARTED         = 'queue.job.processing.started';
@@ -31,9 +21,6 @@ class QueueEventManager
     public const HANDLER_CONNECTION_FAILED      = 'queue.handler.connection.failed';
     public const HANDLER_CONNECTION_ESTABLISHED = 'queue.handler.connection.established';
 
-    /**
-     * Emit job pushed event
-     */
     public static function jobPushed(
         string $handler,
         string $queue,
@@ -53,9 +40,6 @@ class QueueEventManager
         Events::trigger(self::JOB_PUSHED, $event);
     }
 
-    /**
-     * Emit job push failed event
-     */
     public static function jobPushFailed(
         string $handler,
         string $queue,
@@ -76,9 +60,6 @@ class QueueEventManager
         Events::trigger(self::JOB_PUSH_FAILED, $event);
     }
 
-    /**
-     * Emit job processing started event
-     */
     public static function jobProcessingStarted(
         string $handler,
         string $queue,
@@ -98,9 +79,6 @@ class QueueEventManager
         Events::trigger(self::JOB_PROCESSING_STARTED, $event);
     }
 
-    /**
-     * Emit job processing completed event
-     */
     public static function jobProcessingCompleted(
         string $handler,
         string $queue,
@@ -122,9 +100,6 @@ class QueueEventManager
         Events::trigger(self::JOB_PROCESSING_COMPLETED, $event);
     }
 
-    /**
-     * Emit job failed event
-     */
     public static function jobFailed(
         string $handler,
         string $queue,
@@ -148,9 +123,6 @@ class QueueEventManager
         Events::trigger(self::JOB_FAILED, $event);
     }
 
-    /**
-     * Emit queue cleared event
-     */
     public static function queueCleared(
         string $handler,
         ?string $queue = null,
@@ -164,9 +136,6 @@ class QueueEventManager
         Events::trigger(self::QUEUE_CLEARED, $event);
     }
 
-    /**
-     * Emit worker started event
-     */
     public static function workerStarted(
         string $handler,
         string $queue,
@@ -187,9 +156,6 @@ class QueueEventManager
         Events::trigger(self::WORKER_STARTED, $event);
     }
 
-    /**
-     * Emit worker stopped event
-     */
     public static function workerStopped(
         string $handler,
         string $queue,
@@ -212,9 +178,6 @@ class QueueEventManager
         Events::trigger(self::WORKER_STOPPED, $event);
     }
 
-    /**
-     * Emit handler connection established event
-     */
     public static function handlerConnectionEstablished(
         string $handler,
         array $config = [],
@@ -228,9 +191,6 @@ class QueueEventManager
         Events::trigger(self::HANDLER_CONNECTION_ESTABLISHED, $event);
     }
 
-    /**
-     * Emit handler connection failed event
-     */
     public static function handlerConnectionFailed(
         string $handler,
         Throwable $exception,

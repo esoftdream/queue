@@ -1,68 +1,46 @@
 <?php
 
-declare(strict_types=1);
-
-/**
- * This file is part of CodeIgniter Queue.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
-namespace Tests;
+namespace Esoftdream\Queue\Tests;
 
 use Esoftdream\Queue\QueuePushResult;
-use Tests\Support\TestCase;
+use Esoftdream\Queue\Tests\Support\TestCase;
 
-/**
- * @internal
- */
-final class QueuePushResultTest extends TestCase
+class QueuePushResultTest extends TestCase
 {
-    public function testConstructorSuccess(): void
+    public function testSuccessCreatesResultWithJobId(): void
     {
-        $result = new QueuePushResult(true, 123456);
+        $result = QueuePushResult::success('job-123');
 
-        $this->assertTrue($result->getStatus());
-        $this->assertSame(123456, $result->getJobId());
-        $this->assertNull($result->getError());
+        $this->assertTrue($result->isSuccess);
+        $this->assertEquals('job-123', $result->jobId);
+        $this->assertNull($result->error);
+        $this->assertFalse($result->isFailed());
     }
 
-    public function testConstructorFailure(): void
+    public function testFailureCreatesResultWithError(): void
     {
-        $result = new QueuePushResult(false, null, 'Something went wrong');
+        $result = QueuePushResult::failure('Connection failed');
 
-        $this->assertFalse($result->getStatus());
-        $this->assertNull($result->getJobId());
-        $this->assertSame('Something went wrong', $result->getError());
+        $this->assertFalse($result->isSuccess);
+        $this->assertNull($result->jobId);
+        $this->assertEquals('Connection failed', $result->error);
+        $this->assertTrue($result->isFailed());
     }
 
-    public function testStaticSuccess(): void
+    public function testSuccessWithIntegerJobId(): void
     {
-        $result = QueuePushResult::success(999888);
+        $result = QueuePushResult::success(456);
 
-        $this->assertTrue($result->getStatus());
-        $this->assertSame(999888, $result->getJobId());
-        $this->assertNull($result->getError());
+        $this->assertTrue($result->isSuccess);
+        $this->assertEquals('456', $result->jobId);
     }
 
-    public function testStaticFailure(): void
+    public function testIsFailedReturnsCorrectStatus(): void
     {
-        $result = QueuePushResult::failure('Redis error');
+        $success = QueuePushResult::success('job-1');
+        $failure = QueuePushResult::failure('error');
 
-        $this->assertFalse($result->getStatus());
-        $this->assertNull($result->getJobId());
-        $this->assertSame('Redis error', $result->getError());
-    }
-
-    public function testStaticFailureWithoutError(): void
-    {
-        $result = QueuePushResult::failure();
-
-        $this->assertFalse($result->getStatus());
-        $this->assertNull($result->getJobId());
-        $this->assertNull($result->getError());
+        $this->assertFalse($success->isFailed());
+        $this->assertTrue($failure->isFailed());
     }
 }
