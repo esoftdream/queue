@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Esoftdream\Queue\Interfaces;
+namespace Esoftdream\Queue;
 
 interface JobInterface
 {
@@ -13,8 +13,4 @@ interface JobInterface
     public function getTries(): int;
 
     public function getData(): array;
-
-    public function setData(array $data): void;
-
-    public function execute(): void;
 }

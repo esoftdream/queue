@@ -2,78 +2,25 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of CodeIgniter Queue.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Esoftdream\Queue\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
-use Esoftdream\Queue\Compatibility\SignalTrait;
 use Esoftdream\Queue\Config\Queue as QueueConfig;
 use Esoftdream\Queue\Entities\QueueJob;
 use Esoftdream\Queue\Events\QueueEventManager;
 use Esoftdream\Queue\Payloads\PayloadMetadata;
-use Exception;
 use Throwable;
 
 class QueueWork extends BaseCommand
 {
-    use SignalTrait;
-
-    /**
-     * The Command's Group
-     *
-     * @var string
-     */
     protected $group = 'Queue';
-
-    /**
-     * Worker ID for tracking this worker instance
-     */
-    private string $workerId;
-
-    /**
-     * The Command's Name
-     *
-     * @var string
-     */
     protected $name = 'queue:work';
-
-    /**
-     * The Command's Description
-     *
-     * @var string
-     */
     protected $description = 'Process jobs from a given queue.';
-
-    /**
-     * The Command's Usage
-     *
-     * @var string
-     */
     protected $usage = 'queue:work <queueName> [options]';
-
-    /**
-     * The Command's Arguments
-     *
-     * @var array<string, string>
-     */
     protected $arguments = [
         'queueName' => 'Name of the queue we will work with.',
     ];
-
-    /**
-     * The Command's Options
-     *
-     * @var array<string, string>
-     */
     protected $options = [
         '-sleep'            => 'Wait time between the next check for available job when the queue is empty. Default value: 10 (seconds).',
         '-rest'             => 'Rest time between the jobs in the queue. Default value: 0 (seconds)',
@@ -86,21 +33,17 @@ class QueueWork extends BaseCommand
         '--stop-when-empty' => 'Stop when the queue is empty.',
     ];
 
-    /**
-     * Actually execute a command.
-     *
-     * @throws Exception
-     */
+    private string $workerId;
+    private bool $running = true;
+
     public function run(array $params)
     {
         set_time_limit(0);
 
-        /** @var QueueConfig $config */
-        $config        = config('Queue');
+        $config = config('Queue');
         $stopWhenEmpty = false;
-        $waiting       = false;
+        $waiting = false;
 
-        // Read queue name from params
         $queue = array_shift($params);
         if ($queue === null) {
             CLI::error('The queueName is not specified.');
@@ -108,7 +51,6 @@ class QueueWork extends BaseCommand
             return EXIT_ERROR;
         }
 
-        // Read options
         [
             $error,
             $sleep,
@@ -134,8 +76,6 @@ class QueueWork extends BaseCommand
         }
 
         $startTime = microtime(true);
-
-        // Generate unique worker ID
         $this->workerId = sprintf('worker-%s-%d', gethostname(), getmypid());
 
         CLI::write('Listening for the jobs with the queue: ' . CLI::color($queue, 'light_cyan'), 'cyan');
@@ -146,13 +86,14 @@ class QueueWork extends BaseCommand
 
         CLI::write(PHP_EOL);
 
-        // Convert priority string to array
         $priority = array_map(trim(...), explode(',', (string) $priority));
 
-        // Register signals for graceful shutdown
-        $this->registerSignals();
+        if (function_exists('pcntl_signal')) {
+            pcntl_async_signals(true);
+            pcntl_signal(SIGTERM, [$this, 'handleSignal']);
+            pcntl_signal(SIGINT, [$this, 'handleSignal']);
+        }
 
-        // Emit worker started event
         QueueEventManager::workerStarted(
             handler: service('queue')->name(),
             queue: $queue,
@@ -169,7 +110,7 @@ class QueueWork extends BaseCommand
             ],
         );
 
-        while ($this->isRunning()) {
+        while ($this->running) {
             $work = service('queue')->pop($queue, $priority);
 
             if ($work === null) {
@@ -194,18 +135,6 @@ class QueueWork extends BaseCommand
                     return EXIT_SUCCESS;
                 }
 
-                if ($this->shouldTerminate()) {
-                    $this->emitWorkerStoppedEvent($queue, $priority, $startTime, $countJobs, 'signal_stop');
-
-                    return EXIT_SUCCESS;
-                }
-
-                if ($this->checkStop($queue, $startTime)) {
-                    $this->emitWorkerStoppedEvent($queue, $priority, $startTime, $countJobs, 'planned_stop');
-
-                    return EXIT_SUCCESS;
-                }
-
                 if ($this->maxTimeCheck($maxTime, $startTime)) {
                     $this->emitWorkerStoppedEvent($queue, $priority, $startTime, $countJobs, 'time_limit');
 
@@ -222,20 +151,8 @@ class QueueWork extends BaseCommand
 
                 $this->handleWork($work, $config, $tries, $retryAfter);
 
-                if ($this->shouldTerminate()) {
-                    $this->emitWorkerStoppedEvent($queue, $priority, $startTime, $countJobs, 'signal_stop');
-
-                    return EXIT_SUCCESS;
-                }
-
                 if ($this->checkMemory($memory)) {
                     $this->emitWorkerStoppedEvent($queue, $priority, $startTime, $countJobs, 'memory_limit');
-
-                    return EXIT_SUCCESS;
-                }
-
-                if ($this->checkStop($queue, $startTime)) {
-                    $this->emitWorkerStoppedEvent($queue, $priority, $startTime, $countJobs, 'planned_stop');
 
                     return EXIT_SUCCESS;
                 }
@@ -257,6 +174,14 @@ class QueueWork extends BaseCommand
                 }
             }
         }
+
+        return EXIT_SUCCESS;
+    }
+
+    public function handleSignal(int $signal): void
+    {
+        $this->running = false;
+        CLI::write(sprintf('Received signal %d. Worker will stop after current job.', $signal), 'yellow');
     }
 
     private function readOptions(array $params, QueueConfig $config, string $queue): array
@@ -273,7 +198,6 @@ class QueueWork extends BaseCommand
             'retryAfter' => $params['retry-after'] ?? CLI::getOption('retry-after'),
         ];
 
-        // Options that, being defined, cannot be `true`
         $keys = ['sleep', 'rest', 'maxJobs', 'maxTime', 'memory', 'priority', 'tries', 'retryAfter'];
 
         foreach ($keys as $key) {
@@ -283,7 +207,7 @@ class QueueWork extends BaseCommand
                 return array_values($options);
             }
         }
-        // Options that, being defined, have to be `int`
+
         $keys = array_diff($keys, ['priority']);
 
         foreach ($keys as $key) {
@@ -303,7 +227,6 @@ class QueueWork extends BaseCommand
 
         $payloadMetadata = null;
 
-        // Emit job processing started event
         QueueEventManager::jobProcessingStarted(
             handler: service('queue')->name(),
             queue: $work->queue,
@@ -314,20 +237,16 @@ class QueueWork extends BaseCommand
         );
 
         try {
-            // Load payload metadata
             $payloadMetadata = PayloadMetadata::fromArray($payload['metadata'] ?? []);
 
-            // Renew lock if needed
             $this->renewLock($payloadMetadata);
 
             $class = $config->resolveJobClass($payload['job']);
             $job   = new $class($payload['data']);
             $job->process();
 
-            // Mark as done
             service('queue')->done($work);
 
-            // Emit job processing completed event
             QueueEventManager::jobProcessingCompleted(
                 handler: service('queue')->name(),
                 queue: $work->queue,
@@ -340,14 +259,11 @@ class QueueWork extends BaseCommand
 
             CLI::write('The processing of this job was successful', 'green');
 
-            // Check chained jobs
             $this->processNextJobInChain($payloadMetadata);
         } catch (Throwable $err) {
             if (isset($job) && ++$work->attempts < ($tries ?? $job->getTries())) {
-                // Schedule for later
                 service('queue')->later($work, $retryAfter ?? $job->getRetryAfter());
             } else {
-                // Mark as failed
                 QueueEventManager::jobFailed(
                     handler: service('queue')->name(),
                     queue: $work->queue,
@@ -363,7 +279,6 @@ class QueueWork extends BaseCommand
             }
             CLI::write('The processing of this job failed', 'red');
         } finally {
-            // Remove lock if needed
             $this->clearLock($payloadMetadata);
 
             timer()->stop('work');
@@ -371,9 +286,6 @@ class QueueWork extends BaseCommand
         }
     }
 
-    /**
-     * Process the next job in the chain
-     */
     private function processNextJobInChain(PayloadMetadata $payloadMetadata): void
     {
         if (! $payloadMetadata->hasChainedJobs()) {
@@ -406,9 +318,6 @@ class QueueWork extends BaseCommand
         CLI::write(sprintf('Chained job: %s has been placed in the queue: %s', $nextPayload->getJob(), $nextPayload->getQueue()), 'green');
     }
 
-    /**
-     * Renew task lock
-     */
     private function renewLock(PayloadMetadata $payloadMetadata): void
     {
         if (! $payloadMetadata->has('taskLockTTL') || ! $payloadMetadata->has('taskLockKey')) {
@@ -418,7 +327,6 @@ class QueueWork extends BaseCommand
         $ttl = $payloadMetadata->get('taskLockTTL');
         $key = $payloadMetadata->get('taskLockKey');
 
-        // Permanent lock, no need to renew
         if ($ttl === 0) {
             return;
         }
@@ -426,9 +334,6 @@ class QueueWork extends BaseCommand
         cache()->save($key, [], $ttl);
     }
 
-    /**
-     * Remove task lock
-     */
     private function clearLock(PayloadMetadata $payloadMetadata): void
     {
         if (! $payloadMetadata->has('taskLockKey')) {
@@ -473,36 +378,6 @@ class QueueWork extends BaseCommand
         return false;
     }
 
-    private function checkStop(string $queue, float $startTime): bool
-    {
-        $time = cache()->get(sprintf('queue-%s-stop', $queue));
-
-        if ($time === null) {
-            return false;
-        }
-
-        if ($startTime < (float) $time) {
-            CLI::write('The termination of this worker has been planned. Stopping.', 'yellow');
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Handle interruption
-     */
-    private function onInterruption(int $signal): void
-    {
-        $this->requestTermination();
-
-        CLI::write(sprintf('The termination of this worker has been requested with: %s.', $this->getSignalName($signal)), 'yellow');
-    }
-
-    /**
-     * Emit worker stopped event with runtime statistics
-     */
     private function emitWorkerStoppedEvent(string $queue, array $priorities, float $startTime, int $jobsProcessed, string $reason): void
     {
         $uptime = microtime(true) - $startTime;

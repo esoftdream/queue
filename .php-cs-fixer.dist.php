@@ -3,16 +3,12 @@
 declare(strict_types=1);
 
 /**
- * This file is part of CodeIgniter Queue.
+ * This file is part of Esoftdream Queue.
  *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
+ * (c) Esoftdream
  */
 
-use CodeIgniter\CodingStandard\CodeIgniter4;
-use Nexus\CsConfig\Factory;
+use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 $finder = Finder::create()
@@ -24,18 +20,12 @@ $finder = Finder::create()
     ->exclude('build')
     ->append([__FILE__]);
 
-$overrides = [
-    'declare_strict_types' => true,
-    'void_return'          => true,
-];
+$config = new Config();
+$config
+    ->setFinder($finder)
+    ->setCacheFile('build/.php-cs-fixer.cache')
+    ->setRules([
+        '@PSR12' => true,
+    ]);
 
-$options = [
-    'finder'    => $finder,
-    'cacheFile' => 'build/.php-cs-fixer.cache',
-];
-
-return Factory::create(new CodeIgniter4(), $overrides, $options)->forLibrary(
-    'CodeIgniter Queue',
-    'CodeIgniter Foundation',
-    'admin@codeigniter.com',
-);
+return $config;

@@ -1,53 +1,54 @@
 {
     "name": "esoftdream/queue",
-    "description": "Queues for CodeIgniter 4 framework - Esoftdream custom version",
+    "description": "Queue system for CodeIgniter 4 with Symfony Messenger backend",
     "license": "MIT",
     "type": "library",
     "keywords": [
         "codeigniter",
         "codeigniter4",
         "queue",
-        "database",
-        "redis",
-        "predis"
+        "symfony",
+        "symfony-messenger",
+        "job",
+        "worker"
     ],
     "authors": [
         {
-            "name": "michalsn",
-            "homepage": "https://github.com/michalsn",
+            "name": "Esoftdream",
+            "homepage": "https://esoftdream.com",
             "role": "Developer"
         }
     ],
-    "homepage": "https://github.com/codeigniter4/queue",
+    "homepage": "https://github.com/esoftdream/queue",
     "require": {
-        "php": "^8.1"
+        "php": "^8.1",
+        "psr/log": "^1.0|^2.0|^3.0",
+        "symfony/messenger": "^6.0|^7.0",
+        "symfony/event-dispatcher": "^6.0|^7.0"
     },
     "require-dev": {
-        "codeigniter4/devkit": "^1.3",
-        "codeigniter4/framework": "^4.3",
-        "predis/predis": "^2.0",
-        "phpstan/phpstan-strict-rules": "^2.0",
-        "php-amqplib/php-amqplib": "^3.7"
+        "phpunit/phpunit": "^10.0",
+        "phpstan/phpstan": "^1.10",
+        "codeigniter4/framework": "^4.6",
+        "codeigniter4/devkit": "^1.2"
+    },
+    "suggest": {
+        "symfony/amqp-messenger": "For AMQP transport (RabbitMQ)",
+        "symfony/doctrine-messenger": "For Doctrine transport",
+        "symfony/redis-messenger": "For Redis transport",
+        "symfony/uid": "For generating unique message IDs"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Esoftdream\\Queue\\": "src"
-        },
-        "exclude-from-classmap": [
-            "**/Database/Migrations/**"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests"
+            "Esoftdream\\Queue\\Tests\\": "tests"
         }
-    },
-    "suggest": {
-        "ext-redis": "If you want to use RedisHandler",
-        "predis/predis": "If you want to use PredisHandler",
-        "php-amqplib/php-amqplib": "If you want to use RabbitMQHandler"
     },
     "config": {
         "allow-plugins": {
@@ -55,26 +56,8 @@
         }
     },
     "scripts": {
-        "analyze": [
-            "phpstan analyze",
-            "psalm",
-            "rector process --dry-run"
-        ],
-        "sa": "@analyze",
-        "ci": [
-            "Composer\\Config::disableProcessTimeout",
-            "@cs",
-            "@deduplicate",
-            "@inspect",
-            "@analyze",
-            "@test"
-        ],
+        "test": "phpunit",
         "cs": "php-cs-fixer fix --ansi --verbose --dry-run --diff",
-        "cs-fix": "php-cs-fixer fix --ansi --verbose --diff",
-        "style": "@cs-fix",
-        "deduplicate": "phpcpd src/ tests/",
-        "inspect": "deptrac analyze --cache-file=build/deptrac.cache",
-        "mutate": "infection --threads=2 --skip-initial-tests --coverage=build/phpunit",
-        "test": "phpunit"
+        "cs-fix": "php-cs-fixer fix --ansi --verbose --diff"
     }
 }

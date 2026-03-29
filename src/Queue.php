@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of CodeIgniter Queue.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Esoftdream\Queue;
 
 use Esoftdream\Queue\Config\Queue as QueueConfig;
@@ -21,13 +12,26 @@ class Queue
 {
     public function __construct(protected QueueConfig $config)
     {
-        if (! isset($config->handlers[$config->defaultHandler])) {
+        if (!isset($config->handlers[$config->defaultHandler])) {
             throw QueueException::forIncorrectHandler();
         }
     }
 
     public function init(): QueueInterface
     {
-        return new $this->config->handlers[$this->config->defaultHandler]($this->config);
+        $handlerClass = $this->config->handlers[$this->config->defaultHandler];
+
+        return new $handlerClass($this->config);
+    }
+
+    public function handler(string $name): QueueInterface
+    {
+        if (!isset($this->config->handlers[$name])) {
+            throw QueueException::forIncorrectHandler();
+        }
+
+        $handlerClass = $this->config->handlers[$name];
+
+        return new $handlerClass($this->config);
     }
 }

@@ -2,197 +2,286 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of CodeIgniter Queue.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Esoftdream\Queue\Handlers;
 
-use CodeIgniter\Exceptions\CriticalError;
-use CodeIgniter\I18n\Time;
 use Esoftdream\Queue\Config\Queue as QueueConfig;
 use Esoftdream\Queue\Entities\QueueJob;
 use Esoftdream\Queue\Enums\Status;
-use Esoftdream\Queue\Events\QueueEventManager;
-use Esoftdream\Queue\Models\QueueJobModel;
+use Esoftdream\Queue\Interfaces\QueueInterface;
+use Esoftdream\Queue\PayloadMetadata;
 use Esoftdream\Queue\Payloads\Payload;
-use Esoftdream\Queue\Payloads\PayloadMetadata;
 use Esoftdream\Queue\QueuePushResult;
-use ReflectionException;
-use RuntimeException;
-use Throwable;
+use Psr\Log\LoggerInterface;
 
-class DatabaseHandler extends BaseHandler
+class DatabaseHandler implements QueueInterface
 {
-    private readonly QueueJobModel $jobModel;
+    protected ?int $delay = null;
+    protected ?int $priority = null;
+    protected \CodeIgniter\Database\BaseBuilder $builder;
+    protected string $table = 'queue_jobs';
 
-    public function __construct(protected QueueConfig $config)
-    {
-        try {
-            $connection     = db_connect($config->database['dbGroup'], $config->database['getShared']);
-            $this->jobModel = model(QueueJobModel::class, true, $connection);
-
-            // Emit connection established event
-            QueueEventManager::handlerConnectionEstablished(
-                handler: $this->name(),
-                config: $config->database,
-            );
-        } catch (Throwable $e) {
-            // Emit connection failed event
-            QueueEventManager::handlerConnectionFailed(
-                handler: $this->name(),
-                exception: $e,
-                config: $config->database,
-            );
-
-            throw new CriticalError('Queue: Database connection failed. ' . $e->getMessage());
-        }
+    public function __construct(
+        protected QueueConfig $config,
+        protected ?LoggerInterface $logger = null
+    ) {
+        $db = \Config\Database::connect();
+        $this->builder = $db->table($this->table);
     }
 
-    /**
-     * Name of the handler.
-     */
     public function name(): string
     {
         return 'database';
     }
 
-    /**
-     * Add job to the queue.
-     */
     public function push(string $queue, string $job, array $data, ?PayloadMetadata $metadata = null): QueuePushResult
     {
         $this->validateJobAndPriority($queue, $job);
 
-        $queueJob = new QueueJob([
-            'queue'        => $queue,
-            'payload'      => new Payload($job, $data, $metadata),
-            'priority'     => $this->priority,
-            'status'       => Status::PENDING->value,
-            'attempts'     => 0,
-            'available_at' => Time::now()->addSeconds($this->delay ?? 0),
-        ]);
-
-        $this->priority = $this->delay = null;
+        $insertData = [
+            'queue' => $queue,
+            'job' => $job,
+            'payload' => json_encode([
+                'job' => $job,
+                'data' => $data,
+                'metadata' => $metadata?->toArray(),
+            ]),
+            'status' => Status::Waiting->value,
+            'priority' => $this->priority ?? 0,
+            'attempts' => 0,
+            'available_at' => $this->delay !== null
+                ? date('Y-m-d H:i:s', time() + $this->delay)
+                : date('Y-m-d H:i:s'),
+            'reserved_at' => null,
+            'reserved_by' => null,
+            'finished_at' => null,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
 
         try {
-            $jobId = $this->jobModel->insert($queueJob);
-        } catch (Throwable $e) {
-            // Emit push failed event
-            QueueEventManager::jobPushFailed(
-                handler: $this->name(),
-                queue: $queue,
-                jobClass: $job,
-                exception: $e,
-            );
+            $result = $this->builder->insert($insertData);
+            $insertId = $result->getInsertID();
 
+            $this->delay = null;
+            $this->priority = null;
+
+            return QueuePushResult::success((string) $insertId);
+        } catch (\Throwable $e) {
+            $this->logger?->error('Failed to push job: ' . $e->getMessage());
             return QueuePushResult::failure($e->getMessage());
         }
-
-        if ($jobId === 0) {
-            $err = new RuntimeException('Failed to insert job into the database.');
-            QueueEventManager::jobPushFailed(
-                handler: $this->name(),
-                queue: $queue,
-                jobClass: $job,
-                exception: $err,
-            );
-
-            return QueuePushResult::failure($err->getMessage());
-        }
-
-        // Set the job ID for the successful push event
-        $queueJob->id = $jobId;
-
-        // Emit job pushed event
-        QueueEventManager::jobPushed(
-            handler: $this->name(),
-            queue: $queue,
-            job: $queueJob,
-        );
-
-        return QueuePushResult::success($jobId);
     }
 
-    /**
-     * Get job from the queue.
-     *
-     * @throws ReflectionException
-     */
-    public function pop(string $queue, array $priorities): ?QueueJob
+    public function pop(string $queue, array $priorities = []): ?\Esoftdream\Queue\Entities\QueueJob
     {
-        $queueJob = $this->jobModel->getFromQueue($queue, $priorities);
+        $now = date('Y-m-d H:i:s');
 
-        if ($queueJob === null) {
+        $this->builder
+            ->where('queue', $queue)
+            ->where('status', Status::Waiting->value)
+            ->where('available_at <=', $now);
+
+        if (!empty($priorities)) {
+            $this->builder->whereIn('priority', $priorities);
+        }
+
+        $this->builder->orderBy('priority', 'DESC');
+        $this->builder->orderBy('available_at', 'ASC');
+        $this->builder->limit(1);
+
+        $row = $this->builder->get()->getRow();
+
+        if ($row === null) {
             return null;
         }
 
-        // Set the actual status as in DB.
-        $queueJob->status = Status::RESERVED->value;
-        $queueJob->syncOriginal();
+        $updateData = [
+            'status' => Status::Reserved->value,
+            'reserved_at' => $now,
+            'reserved_by' => gethostname(),
+            'attempts' => $row->attempts + 1,
+            'updated_at' => $now,
+        ];
 
-        return $queueJob;
+        $this->builder->where('id', $row->id)->update($updateData);
+
+        return QueueJob::fromObject($row);
     }
 
-    /**
-     * Schedule job for later
-     *
-     * @throws ReflectionException
-     */
     public function later(QueueJob $queueJob, int $seconds): bool
     {
-        $queueJob->status       = Status::PENDING->value;
-        $queueJob->available_at = Time::now()->addSeconds($seconds);
+        $availableAt = date('Y-m-d H:i:s', time() + $seconds);
 
-        return $this->jobModel->save($queueJob);
+        return (bool) $this->builder
+            ->where('id', $queueJob->id)
+            ->update([
+                'available_at' => $availableAt,
+                'status' => Status::Waiting->value,
+                'reserved_at' => null,
+                'reserved_by' => null,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
     }
 
-    /**
-     * Move job to failed table or move and delete.
-     *
-     * @throws ReflectionException
-     */
-    public function failed(QueueJob $queueJob, Throwable $err, bool $keepJob): bool
+    public function failed(QueueJob $queueJob, \Throwable $err, bool $keepJob = true): bool
     {
-        if ($keepJob) {
-            $this->logFailed($queueJob, $err);
-        }
+        $updateData = [
+            'status' => Status::Failed->value,
+            'finished_at' => date('Y-m-d H:i:s'),
+            'exception' => $err->getMessage(),
+            'trace' => $err->getTraceAsString(),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
 
-        return $this->jobModel->delete($queueJob->id);
-    }
+        $result = (bool) $this->builder
+            ->where('id', $queueJob->id)
+            ->update($updateData);
 
-    /**
-     * Change job status to DONE or delete it.
-     */
-    public function done(QueueJob $queueJob): bool
-    {
-        return $this->jobModel->delete($queueJob->id);
-    }
-
-    /**
-     * Delete queue jobs
-     */
-    public function clear(?string $queue = null): bool
-    {
-        if ($queue !== null) {
-            $this->jobModel->where('queue', $queue);
-        }
-
-        $result = $this->jobModel->delete();
-
-        if ($result) {
-            // Emit queue cleared event
-            QueueEventManager::queueCleared(
-                handler: $this->name(),
-                queue: $queue,
-            );
+        if (!$keepJob) {
+            $this->builder->where('id', $queueJob->id)->delete();
         }
 
         return $result;
+    }
+
+    public function done(QueueJob $queueJob): bool
+    {
+        return (bool) $this->builder
+            ->where('id', $queueJob->id)
+            ->update([
+                'status' => Status::Done->value,
+                'finished_at' => date('Y-m-d H:i:s'),
+                'reserved_at' => null,
+                'reserved_by' => null,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+    }
+
+    public function clear(?string $queue = null): bool
+    {
+        $this->builder->whereIn('status', [
+            Status::Waiting->value,
+            Status::Reserved->value,
+        ]);
+
+        if ($queue !== null) {
+            $this->builder->where('queue', $queue);
+        }
+
+        return (bool) $this->builder->delete();
+    }
+
+    public function getQueues(): array
+    {
+        return array_keys($this->config->handlers);
+    }
+
+    public function priority(int $priority): self
+    {
+        $this->priority = $priority;
+        return $this;
+    }
+
+    public function delay(int $delay): self
+    {
+        $this->delay = $delay;
+        return $this;
+    }
+
+    public function setPriority(int $priority): self
+    {
+        $this->priority = $priority;
+        return $this;
+    }
+
+    public function setDelay(int $delay): self
+    {
+        $this->delay = $delay;
+        return $this;
+    }
+
+    public function listFailed(?string $queue = null): array
+    {
+        $this->builder->where('status', Status::Failed->value);
+
+        if ($queue !== null) {
+            $this->builder->where('queue', $queue);
+        }
+
+        $this->builder->orderBy('updated_at', 'DESC');
+
+        $results = [];
+        foreach ($this->builder->get()->getResult() as $row) {
+            $results[] = QueueJob::fromObject($row);
+        }
+
+        return $results;
+    }
+
+    public function retry(?int $id, ?string $queue = null): int
+    {
+        $this->builder->where('status', Status::Failed->value);
+
+        if ($id !== null) {
+            $this->builder->where('id', $id);
+        }
+
+        if ($queue !== null) {
+            $this->builder->where('queue', $queue);
+        }
+
+        $jobs = $this->builder->get()->getResult();
+
+        $count = 0;
+        foreach ($jobs as $job) {
+            $payload = json_decode($job->payload, true);
+
+            $this->push(
+                $job->queue,
+                $job->job,
+                $payload['data'] ?? [],
+                isset($payload['metadata'])
+                    ? PayloadMetadata::fromArray($payload['metadata'])
+                    : null
+            );
+
+            $this->builder->where('id', $job->id)->delete();
+            $count++;
+        }
+
+        return $count;
+    }
+
+    public function forget(int $id): bool
+    {
+        $affected = $this->builder
+            ->where('id', $id)
+            ->where('status', Status::Failed->value)
+            ->delete();
+
+        return $affected > 0;
+    }
+
+    public function flush(?int $hours = null, ?string $queue = null): void
+    {
+        $this->builder->where('status', Status::Failed->value);
+
+        if ($queue !== null) {
+            $this->builder->where('queue', $queue);
+        }
+
+        if ($hours !== null) {
+            $cutoff = date('Y-m-d H:i:s', time() - ($hours * 3600));
+            $this->builder->where('updated_at <=', $cutoff);
+        }
+
+        $this->builder->delete();
+    }
+
+    private function validateJobAndPriority(string $queue, string $job): void
+    {
+        if ($this->priority !== null && $this->priority < 0) {
+            throw new \InvalidArgumentException('Priority must be a positive integer.');
+        }
     }
 }
