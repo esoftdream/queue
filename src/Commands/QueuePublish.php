@@ -26,7 +26,7 @@ class QueuePublish extends BaseCommand
 
     public function run(array $params): void
     {
-        $source = service('autoloader')->getNamespace('CodeIgniter\\Queue')[0];
+        $source = service('autoloader')->getNamespace('Esoftdream\\Queue')[0] ?? APPPATH;
 
         $publisher = new Publisher($source, APPPATH);
 
