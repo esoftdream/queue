@@ -18,10 +18,10 @@ use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Model;
-use Esoftdream\Queue\Entities\QueueJob;
-use Esoftdream\Queue\Enums\Status;
 use CodeIgniter\Validation\ValidationInterface;
 use Config\Database;
+use Esoftdream\Queue\Entities\QueueJob;
+use Esoftdream\Queue\Enums\Status;
 use ReflectionException;
 
 class QueueJobModel extends Model

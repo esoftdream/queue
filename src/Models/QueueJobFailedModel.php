@@ -16,9 +16,9 @@ namespace Esoftdream\Queue\Models;
 use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Model;
-use Esoftdream\Queue\Entities\QueueJobFailed;
 use CodeIgniter\Validation\ValidationInterface;
 use Config\Database;
+use Esoftdream\Queue\Entities\QueueJobFailed;
 
 class QueueJobFailedModel extends Model
 {

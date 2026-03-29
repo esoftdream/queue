@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Tests\Models;
 
-use Esoftdream\Queue\Models\QueueJobModel;
 use CodeIgniter\Test\ReflectionHelper;
+use Esoftdream\Queue\Models\QueueJobModel;
 use Tests\Support\TestCase;
 
 /**

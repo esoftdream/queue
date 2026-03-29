@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Tests\Commands;
 
-use Esoftdream\Queue\Models\QueueJobFailedModel;
 use CodeIgniter\Test\Filters\CITestStreamFilter;
+use Esoftdream\Queue\Models\QueueJobFailedModel;
 use Tests\Support\CLITestCase;
 
 /**

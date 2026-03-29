@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Tests\Commands;
 
 use CodeIgniter\I18n\Time;
-use Esoftdream\Queue\Models\QueueJobFailedModel;
 use CodeIgniter\Test\Filters\CITestStreamFilter;
+use Esoftdream\Queue\Models\QueueJobFailedModel;
 use Exception;
 use Tests\Support\CLITestCase;
 

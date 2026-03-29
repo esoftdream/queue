@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace Tests;
 
 use CodeIgniter\Exceptions\CriticalError;
+use CodeIgniter\Test\ReflectionHelper;
 use Esoftdream\Queue\Entities\QueueJob;
 use Esoftdream\Queue\Exceptions\QueueException;
 use Esoftdream\Queue\Handlers\RabbitMQHandler;
 use Esoftdream\Queue\QueuePushResult;
-use CodeIgniter\Test\ReflectionHelper;
 use Exception;
 use PhpAmqpLib\Connection\AMQPConnectionFactory;
 use Tests\Support\Config\Queue as QueueConfig;

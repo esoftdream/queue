@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Tests;
 
 use CodeIgniter\I18n\Time;
-use Esoftdream\Queue\Entities\QueueJob;
 use CodeIgniter\Test\ReflectionHelper;
+use Esoftdream\Queue\Entities\QueueJob;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\Config\Queue as QueueConfig;
 use Tests\Support\Database\Seeds\TestDatabaseQueueSeeder;

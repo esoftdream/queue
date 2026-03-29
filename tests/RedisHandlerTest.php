@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Tests;
 
 use CodeIgniter\I18n\Time;
+use CodeIgniter\Test\ReflectionHelper;
 use Esoftdream\Queue\Entities\QueueJob;
 use Esoftdream\Queue\Exceptions\QueueException;
 use Esoftdream\Queue\Handlers\RedisHandler;
-use CodeIgniter\Test\ReflectionHelper;
 use Exception;
 use ReflectionException;
 use Tests\Support\Config\Queue as QueueConfig;
