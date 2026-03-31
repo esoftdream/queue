@@ -12,48 +12,41 @@ class Services
 {
     public static function queue(bool $getShared = true): QueueInterface
     {
-        $config = self::queueConfig();
-
         if ($getShared) {
-            return \Config\Services::getSharedInstance('queue', function () use ($config) {
-                return self::createHandler($config);
-            });
+            return \Config\Services::getSharedInstance('queue');
         }
 
-        return self::createHandler($config);
+        return self::createHandler(self::queueConfig());
     }
 
     public static function queueConfig(bool $getShared = true): Queue
     {
-        return \Config\Services::getConfigInstance('queue', $getShared, function () {
-            return new Queue();
-        });
+        if ($getShared) {
+            return \Config\Services::getSharedInstance('queueConfig');
+        }
+
+        /** @var Queue|null $config */
+        $config = config('Queue');
+
+        return $config ?? new Queue();
     }
 
     public static function messenger(bool $getShared = true): SymfonyMessengerHandler
     {
-        $config = self::queueConfig();
-
         if ($getShared) {
-            return \Config\Services::getSharedInstance('queueMessenger', function () use ($config) {
-                return new SymfonyMessengerHandler($config, self::logger());
-            });
+            return \Config\Services::getSharedInstance('queueMessenger');
         }
 
-        return new SymfonyMessengerHandler($config, self::logger());
+        return new SymfonyMessengerHandler(self::queueConfig(), self::logger());
     }
 
     public static function databaseHandler(bool $getShared = true): DatabaseHandler
     {
-        $config = self::queueConfig();
-
         if ($getShared) {
-            return \Config\Services::getSharedInstance('queueDatabase', function () use ($config) {
-                return new DatabaseHandler($config, self::logger());
-            });
+            return \Config\Services::getSharedInstance('queueDatabase');
         }
 
-        return new DatabaseHandler($config, self::logger());
+        return new DatabaseHandler(self::queueConfig(), self::logger());
     }
 
     private static function createHandler(Queue $config): QueueInterface
@@ -62,8 +55,8 @@ class Services
 
         return match ($handlerName) {
             'database' => self::databaseHandler(false),
-            'symfony' => self::messenger(false),
-            default => new DatabaseHandler($config, self::logger()),
+            'symfony'  => self::messenger(false),
+            default    => new DatabaseHandler($config, self::logger()),
         };
     }
 

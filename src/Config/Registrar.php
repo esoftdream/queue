@@ -19,6 +19,15 @@ class Registrar
             'queue' => [static function ($getShared = true) {
                 return \Esoftdream\Queue\Config\Services::queue($getShared);
             }],
+            'queueConfig' => [static function ($getShared = true) {
+                return \Esoftdream\Queue\Config\Services::queueConfig($getShared);
+            }],
+            'queueMessenger' => [static function ($getShared = true) {
+                return \Esoftdream\Queue\Config\Services::messenger($getShared);
+            }],
+            'queueDatabase' => [static function ($getShared = true) {
+                return \Esoftdream\Queue\Config\Services::databaseHandler($getShared);
+            }],
         ];
     }
 }
