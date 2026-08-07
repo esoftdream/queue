@@ -1,19 +1,18 @@
 name: PHPUnit
 
 on:
-  pull_request:
+  push:
     branches:
       - develop
-
     paths:
       - '**.php'
       - 'composer.*'
       - 'phpunit*'
       - '.github/workflows/phpunit.yml'
-  push:
+
+  pull_request:
     branches:
       - develop
-
     paths:
       - '**.php'
       - 'composer.*'
@@ -29,39 +28,43 @@ permissions:
 
 jobs:
   phpunit:
-    name: PHPUnit Test (PHP ${{ matrix.php-version }})
+    name: PHP ${{ matrix.php }} / CI4 ${{ matrix.ci4 }}
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+
     strategy:
+      fail-fast: false
       matrix:
-        php-version: ['8.1', '8.2', '8.3']
+        include:
+          - php: '8.1'
+            ci4: '^4.6'
+
+          - php: '8.2'
+            ci4: '^4.6'
+
+          - php: '8.2'
+            ci4: '^4.7'
+
+          - php: '8.3'
+            ci4: '^4.7'
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-      - name: Set up PHP
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
-          tools: composer, phpunit
-          extensions: json, mbstring
-          coverage: xdebug
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer
 
-      - name: Get composer cache directory
-        run: echo "COMPOSER_CACHE_FILES_DIR=$(composer config cache-files-dir)" >> $GITHUB_ENV
+      - name: Validate composer.json
+        run: composer validate --strict
 
-      - name: Cache composer dependencies
-        uses: actions/cache@v5
-        with:
-          path: ${{ env.COMPOSER_CACHE_FILES_DIR }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
+      - name: Require CodeIgniter ${{ matrix.ci4 }}
+        run: composer require --dev codeigniter4/framework:${{ matrix.ci4 }} --no-update
 
       - name: Install dependencies
-        run: composer install --no-progress --no-interaction --prefer-dist --optimize-autoloader
+        run: composer update --prefer-dist --no-interaction --no-progress
 
-      - name: Test with PHPUnit
-        run: vendor/bin/phpunit --colors=never
+      - name: PHPUnit
+        run: vendor/bin/phpunit
