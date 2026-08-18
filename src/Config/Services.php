@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Esoftdream\Queue\Config;
 
-use Esoftdream\Queue\Handlers\DatabaseHandler;
-use Esoftdream\Queue\Handlers\SymfonyMessengerHandler;
-use Esoftdream\Queue\Interfaces\QueueInterface;
+use Esoftdream\Queue\Database\CodeIgniter4DatabaseAdapter;
+use Esoftdream\Queue\Events\CodeIgniter4EventDispatcher;
+use Psr\Log\LoggerInterface;
+use Ttpryg\Queue\Contracts\QueueInterface;
+use Ttpryg\Queue\QueueManager;
 
 class Services
 {
@@ -16,7 +18,21 @@ class Services
             return \Config\Services::getSharedInstance('queue');
         }
 
-        return self::createHandler(self::queueConfig());
+        return self::queueManager(false)->init();
+    }
+
+    public static function queueManager(bool $getShared = true): QueueManager
+    {
+        if ($getShared) {
+            return \Config\Services::getSharedInstance('queueManager');
+        }
+
+        $config = self::queueConfig()->toQueueConfig();
+        $db = new CodeIgniter4DatabaseAdapter;
+        $logger = self::logger();
+        $events = new CodeIgniter4EventDispatcher;
+
+        return new QueueManager($config, $db, $logger, $events);
     }
 
     public static function queueConfig(bool $getShared = true): Queue
@@ -28,39 +44,28 @@ class Services
         /** @var Queue|null $config */
         $config = config('Queue');
 
-        return $config ?? new Queue();
+        return $config ?? new Queue;
     }
 
-    public static function messenger(bool $getShared = true): SymfonyMessengerHandler
+    public static function messenger(bool $getShared = true): QueueInterface
     {
         if ($getShared) {
             return \Config\Services::getSharedInstance('queueMessenger');
         }
 
-        return new SymfonyMessengerHandler(self::queueConfig(), self::logger());
+        return self::queueManager(false)->handler('symfony');
     }
 
-    public static function databaseHandler(bool $getShared = true): DatabaseHandler
+    public static function databaseHandler(bool $getShared = true): QueueInterface
     {
         if ($getShared) {
             return \Config\Services::getSharedInstance('queueDatabase');
         }
 
-        return new DatabaseHandler(self::queueConfig(), self::logger());
+        return self::queueManager(false)->handler('database');
     }
 
-    private static function createHandler(Queue $config): QueueInterface
-    {
-        $handlerName = $config->defaultHandler;
-
-        return match ($handlerName) {
-            'database' => self::databaseHandler(false),
-            'symfony'  => self::messenger(false),
-            default    => new DatabaseHandler($config, self::logger()),
-        };
-    }
-
-    private static function logger(): ?\Psr\Log\LoggerInterface
+    private static function logger(): ?LoggerInterface
     {
         try {
             return \Config\Services::logger();

@@ -10,9 +10,13 @@ use CodeIgniter\CLI\CLI;
 class QueueStop extends BaseCommand
 {
     protected $group = 'Queue';
+
     protected $name = 'queue:stop';
+
     protected $description = 'Stop a given queue.';
+
     protected $usage = 'queue:stop <queueName>';
+
     protected $arguments = [
         'queueName' => 'Name of the queue we will work with.',
     ];

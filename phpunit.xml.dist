@@ -31,14 +31,6 @@
         </testsuite>
     </testsuites>
 
-    <extensions>
-        <bootstrap class="Nexus\PHPUnit\Tachycardia\TachycardiaExtension">
-            <parameter name="time-limit" value="0.50"/>
-            <parameter name="report-count" value="30"/>
-            <parameter name="format" value="table"/>
-        </bootstrap>
-    </extensions>
-
     <logging>
         <testdoxHtml outputFile="build/phpunit/testdox.html"/>
         <testdoxText outputFile="build/phpunit/testdox.txt"/>

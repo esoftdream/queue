@@ -4,34 +4,8 @@ declare(strict_types=1);
 
 namespace Esoftdream\Queue\Payloads;
 
-use Esoftdream\Queue\PayloadMetadata;
+use Ttpryg\Queue\Payloads\PayloadCollection as CorePayloadCollection;
 
-class PayloadCollection
+class PayloadCollection extends CorePayloadCollection
 {
-    protected array $items = [];
-
-    public function add(Payload $payload): void
-    {
-        $this->items[] = $payload;
-    }
-
-    public function shift(): ?Payload
-    {
-        return array_shift($this->items);
-    }
-
-    public function count(): int
-    {
-        return count($this->items);
-    }
-
-    public function isEmpty(): bool
-    {
-        return empty($this->items);
-    }
-
-    public function all(): array
-    {
-        return $this->items;
-    }
 }

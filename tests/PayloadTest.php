@@ -7,7 +7,7 @@ use Esoftdream\Queue\Tests\Support\TestCase;
 
 class PayloadTest extends TestCase
 {
-    public function testConstructorSetsProperties(): void
+    public function test_constructor_sets_properties(): void
     {
         $data = ['key' => 'value'];
         $metadata = ['queue' => 'high'];
@@ -18,7 +18,7 @@ class PayloadTest extends TestCase
         $this->assertEquals($metadata, $payload->metadata);
     }
 
-    public function testFromArrayCreatesPayload(): void
+    public function test_from_array_creates_payload(): void
     {
         $data = [
             'job' => 'MyJob',
@@ -33,7 +33,7 @@ class PayloadTest extends TestCase
         $this->assertEquals(['priority' => 10], $payload->metadata);
     }
 
-    public function testFromArrayWithMissingKeys(): void
+    public function test_from_array_with_missing_keys(): void
     {
         $payload = Payload::fromArray([]);
 
@@ -42,7 +42,7 @@ class PayloadTest extends TestCase
         $this->assertNull($payload->metadata);
     }
 
-    public function testToArrayReturnsCorrectStructure(): void
+    public function test_to_array_returns_correct_structure(): void
     {
         $payload = new Payload('JobClass', ['foo' => 'bar'], ['queue' => 'default']);
         $array = $payload->toArray();
@@ -54,26 +54,26 @@ class PayloadTest extends TestCase
         ], $array);
     }
 
-    public function testGetJob(): void
+    public function test_get_job(): void
     {
         $payload = new Payload('TestJob');
         $this->assertEquals('TestJob', $payload->getJob());
     }
 
-    public function testGetData(): void
+    public function test_get_data(): void
     {
         $payload = new Payload('Job', ['a' => 1, 'b' => 2]);
         $this->assertEquals(['a' => 1, 'b' => 2], $payload->getData());
     }
 
-    public function testGetMetadata(): void
+    public function test_get_metadata(): void
     {
         $metadata = ['key' => 'value'];
         $payload = new Payload('Job', [], $metadata);
         $this->assertEquals($metadata, $payload->getMetadata());
     }
 
-    public function testGetMetadataReturnsNullWhenNotSet(): void
+    public function test_get_metadata_returns_null_when_not_set(): void
     {
         $payload = new Payload('Job');
         $this->assertNull($payload->getMetadata());

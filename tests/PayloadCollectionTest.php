@@ -8,9 +8,9 @@ use Esoftdream\Queue\Tests\Support\TestCase;
 
 class PayloadCollectionTest extends TestCase
 {
-    public function testAddAndCount(): void
+    public function test_add_and_count(): void
     {
-        $collection = new PayloadCollection();
+        $collection = new PayloadCollection;
 
         $collection->add(new Payload('Job1'));
         $collection->add(new Payload('Job2'));
@@ -18,9 +18,9 @@ class PayloadCollectionTest extends TestCase
         $this->assertEquals(2, $collection->count());
     }
 
-    public function testShift(): void
+    public function test_shift(): void
     {
-        $collection = new PayloadCollection();
+        $collection = new PayloadCollection;
         $payload1 = new Payload('Job1');
         $payload2 = new Payload('Job2');
 
@@ -33,16 +33,16 @@ class PayloadCollectionTest extends TestCase
         $this->assertEquals(1, $collection->count());
     }
 
-    public function testShiftWhenEmpty(): void
+    public function test_shift_when_empty(): void
     {
-        $collection = new PayloadCollection();
+        $collection = new PayloadCollection;
 
         $this->assertNull($collection->shift());
     }
 
-    public function testIsEmpty(): void
+    public function test_is_empty(): void
     {
-        $collection = new PayloadCollection();
+        $collection = new PayloadCollection;
 
         $this->assertTrue($collection->isEmpty());
 
@@ -51,9 +51,9 @@ class PayloadCollectionTest extends TestCase
         $this->assertFalse($collection->isEmpty());
     }
 
-    public function testAll(): void
+    public function test_all(): void
     {
-        $collection = new PayloadCollection();
+        $collection = new PayloadCollection;
         $payload1 = new Payload('Job1');
         $payload2 = new Payload('Job2');
 
@@ -67,9 +67,9 @@ class PayloadCollectionTest extends TestCase
         $this->assertSame($payload2, $items[1]);
     }
 
-    public function testFifoOrder(): void
+    public function test_fifo_order(): void
     {
-        $collection = new PayloadCollection();
+        $collection = new PayloadCollection;
 
         for ($i = 1; $i <= 3; $i++) {
             $collection->add(new Payload("Job{$i}"));

@@ -10,9 +10,13 @@ use CodeIgniter\CLI\CLI;
 class QueueForget extends BaseCommand
 {
     protected $group = 'Queue';
+
     protected $name = 'queue:forget';
+
     protected $description = 'Remove ID from failed job queue.';
+
     protected $usage = 'queue:forget <id>';
+
     protected $arguments = [
         'id' => 'ID of the failed job.',
     ];

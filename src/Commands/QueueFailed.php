@@ -11,9 +11,13 @@ use Esoftdream\Queue\Config\Queue as QueueConfig;
 class QueueFailed extends BaseCommand
 {
     protected $group = 'Queue';
+
     protected $name = 'queue:failed';
+
     protected $description = 'Display failed queue jobs.';
+
     protected $usage = 'queue:failed [options]';
+
     protected $options = [
         '-queue' => 'Queue name.',
     ];

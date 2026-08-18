@@ -7,7 +7,7 @@ use Esoftdream\Queue\Tests\Support\TestCase;
 
 class QueuePushResultTest extends TestCase
 {
-    public function testSuccessCreatesResultWithJobId(): void
+    public function test_success_creates_result_with_job_id(): void
     {
         $result = QueuePushResult::success('job-123');
 
@@ -17,7 +17,7 @@ class QueuePushResultTest extends TestCase
         $this->assertFalse($result->isFailed());
     }
 
-    public function testFailureCreatesResultWithError(): void
+    public function test_failure_creates_result_with_error(): void
     {
         $result = QueuePushResult::failure('Connection failed');
 
@@ -27,7 +27,7 @@ class QueuePushResultTest extends TestCase
         $this->assertTrue($result->isFailed());
     }
 
-    public function testSuccessWithIntegerJobId(): void
+    public function test_success_with_integer_job_id(): void
     {
         $result = QueuePushResult::success(456);
 
@@ -35,7 +35,7 @@ class QueuePushResultTest extends TestCase
         $this->assertEquals('456', $result->jobId);
     }
 
-    public function testIsFailedReturnsCorrectStatus(): void
+    public function test_is_failed_returns_correct_status(): void
     {
         $success = QueuePushResult::success('job-1');
         $failure = QueuePushResult::failure('error');

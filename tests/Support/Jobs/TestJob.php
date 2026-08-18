@@ -7,6 +7,7 @@ use Esoftdream\Queue\BaseJob;
 class TestJob extends BaseJob
 {
     public bool $processed = false;
+
     public array $handledData = [];
 
     public function process(): void

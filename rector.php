@@ -55,23 +55,23 @@ return static function (RectorConfig $rectorConfig): void {
 
     // The paths to refactor (can also be supplied with CLI arguments)
     $rectorConfig->paths([
-        __DIR__ . '/src/',
-        __DIR__ . '/tests/',
+        __DIR__.'/src/',
+        __DIR__.'/tests/',
     ]);
 
     // Include Composer's autoload - required for global execution, remove if running locally
     $rectorConfig->autoloadPaths([
-        __DIR__ . '/vendor/autoload.php',
+        __DIR__.'/vendor/autoload.php',
     ]);
 
     // Do you need to include constants, class aliases, or a custom autoloader?
     $rectorConfig->bootstrapFiles([
-        realpath(getcwd()) . '/vendor/codeigniter4/framework/system/Test/bootstrap.php',
+        realpath(getcwd()).'/vendor/codeigniter4/framework/system/Test/bootstrap.php',
     ]);
 
     $rectorConfig->phpstanConfigs([
-        __DIR__ . '/phpstan.neon.dist',
-        __DIR__ . '/vendor/phpstan/phpstan-strict-rules/rules.neon',
+        __DIR__.'/phpstan.neon.dist',
+        __DIR__.'/vendor/phpstan/phpstan-strict-rules/rules.neon',
     ]);
 
     // Set the target version for refactoring
@@ -82,7 +82,7 @@ return static function (RectorConfig $rectorConfig): void {
 
     // Are there files or rules you need to skip?
     $rectorConfig->skip([
-        __DIR__ . '/app/Views',
+        __DIR__.'/app/Views',
 
         StringifyStrNeedlesRector::class,
         YieldDataProviderRector::class,
@@ -101,12 +101,12 @@ return static function (RectorConfig $rectorConfig): void {
 
         // Skip onInterruption method - called dynamically via reflection in SignalTrait
         RemoveUnusedPrivateMethodRector::class => [
-            __DIR__ . '/src/Commands/QueueWork.php',
+            __DIR__.'/src/Commands/QueueWork.php',
         ],
 
         // Skip for PayloadMetadata in the constructor
         NewInInitializerRector::class => [
-            __DIR__ . '/src/Payloads/Payload.php',
+            __DIR__.'/src/Payloads/Payload.php',
         ],
     ]);
 

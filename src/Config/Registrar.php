@@ -17,16 +17,16 @@ class Registrar
     {
         return [
             'queue' => [static function ($getShared = true) {
-                return \Esoftdream\Queue\Config\Services::queue($getShared);
+                return Services::queue($getShared);
             }],
             'queueConfig' => [static function ($getShared = true) {
-                return \Esoftdream\Queue\Config\Services::queueConfig($getShared);
+                return Services::queueConfig($getShared);
             }],
             'queueMessenger' => [static function ($getShared = true) {
-                return \Esoftdream\Queue\Config\Services::messenger($getShared);
+                return Services::messenger($getShared);
             }],
             'queueDatabase' => [static function ($getShared = true) {
-                return \Esoftdream\Queue\Config\Services::databaseHandler($getShared);
+                return Services::databaseHandler($getShared);
             }],
         ];
     }

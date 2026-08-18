@@ -10,9 +10,13 @@ use CodeIgniter\CLI\CLI;
 class QueueFlush extends BaseCommand
 {
     protected $group = 'Queue';
+
     protected $name = 'queue:flush';
+
     protected $description = 'Flush jobs from failed queues.';
+
     protected $usage = 'queue:flush [options]';
+
     protected $options = [
         '-hours' => 'Number of hours.',
         '-queue' => 'Queue name.',

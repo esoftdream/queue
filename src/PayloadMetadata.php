@@ -6,41 +6,53 @@ namespace Esoftdream\Queue;
 
 use Esoftdream\Queue\Payloads\PayloadCollection;
 use JsonSerializable;
+use Ttpryg\Queue\Entities\PayloadMetadata as CorePayloadMetadata;
 
-class PayloadMetadata implements JsonSerializable
+class PayloadMetadata extends CorePayloadMetadata implements JsonSerializable
 {
     protected array $data = [];
+    protected ?PayloadCollection $chainedJobs = null;
 
-    public function __construct(array $data = [])
-    {
-        $this->data = $data;
-    }
+    public function __construct(
+        string|array|null $userIdOrData = null,
+        ?string $ipAddress = null,
+        ?string $userAgent = null,
+        ?string $requestId = null,
+        ?string $createdAt = null,
+        array $custom = []
+    ) {
+        if (is_array($userIdOrData)) {
+            $this->data = $userIdOrData;
+            parent::__construct(
+                $userIdOrData['user_id'] ?? null,
+                $userIdOrData['ip_address'] ?? null,
+                $userIdOrData['user_agent'] ?? null,
+                $userIdOrData['request_id'] ?? null,
+                $userIdOrData['created_at'] ?? null,
+                $userIdOrData['custom'] ?? []
+            );
 
-    public function setChainedJobs(?PayloadCollection $payloads): self
-    {
-        if ($payloads !== null) {
-            $this->data['chainedJobs'] = $payloads;
+            if (isset($userIdOrData['chainedJobs']) && is_array($userIdOrData['chainedJobs'])) {
+                $collection = new PayloadCollection();
+                foreach ($userIdOrData['chainedJobs'] as $jobData) {
+                    $collection->add(\Esoftdream\Queue\Payloads\Payload::fromArray($jobData));
+                }
+                $this->setChainedJobs($collection);
+            }
         } else {
-            unset($this->data['chainedJobs']);
+            parent::__construct($userIdOrData, $ipAddress, $userAgent, $requestId, $createdAt, $custom);
+            $this->data = $this->toArray();
         }
-
-        return $this;
     }
 
-    public function getChainedJobs(): ?PayloadCollection
+    public static function fromArray(array $data): self
     {
-        return $this->data['chainedJobs'] ?? null;
-    }
-
-    public function hasChainedJobs(): bool
-    {
-        return isset($this->data['chainedJobs']) && $this->data['chainedJobs']->count() > 0;
+        return new self($data);
     }
 
     public function set(string $key, mixed $value): self
     {
         $this->data[$key] = $value;
-
         return $this;
     }
 
@@ -51,14 +63,29 @@ class PayloadMetadata implements JsonSerializable
 
     public function has(string $key): bool
     {
-        return isset($this->data[$key]);
+        return array_key_exists($key, $this->data);
     }
 
     public function remove(string $key): self
     {
         unset($this->data[$key]);
-
         return $this;
+    }
+
+    public function setChainedJobs(?PayloadCollection $chainedJobs): self
+    {
+        $this->chainedJobs = $chainedJobs;
+        return $this;
+    }
+
+    public function getChainedJobs(): ?PayloadCollection
+    {
+        return $this->chainedJobs;
+    }
+
+    public function hasChainedJobs(): bool
+    {
+        return $this->chainedJobs !== null && !$this->chainedJobs->isEmpty();
     }
 
     public function toArray(): array
@@ -68,30 +95,6 @@ class PayloadMetadata implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        return $this->data;
-    }
-
-    public static function fromArray(array $data): self
-    {
-        $metadata = new self();
-
-        foreach ($data as $key => $value) {
-            if ($key === 'chainedJobs' && is_array($value)) {
-                $payloadCollection = new PayloadCollection();
-
-                foreach ($value as $jobData) {
-                    if (isset($jobData['job'], $jobData['data'])) {
-                        $payload = \Esoftdream\Queue\Payloads\Payload::fromArray($jobData);
-                        $payloadCollection->add($payload);
-                    }
-                }
-
-                $metadata->setChainedJobs($payloadCollection);
-            } else {
-                $metadata->set($key, $value);
-            }
-        }
-
-        return $metadata;
+        return $this->toArray();
     }
 }

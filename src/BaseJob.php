@@ -4,40 +4,6 @@ declare(strict_types=1);
 
 namespace Esoftdream\Queue;
 
-abstract class BaseJob
-{
-    protected int $retryAfter = 60;
-    protected int $tries = 1;
+use Ttpryg\Queue\BaseJob as CoreBaseJob;
 
-    public function __construct(
-        protected array $data = []
-    ) {
-    }
-
-    abstract public function process(): void;
-
-    public function getRetryAfter(): int
-    {
-        return $this->retryAfter;
-    }
-
-    public function getTries(): int
-    {
-        return $this->tries;
-    }
-
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
-    public function setData(array $data): void
-    {
-        $this->data = $data;
-    }
-
-    public function execute(): void
-    {
-        $this->process();
-    }
-}
+abstract class BaseJob extends CoreBaseJob {}

@@ -11,8 +11,10 @@ use Throwable;
 
 class QueuePublish extends BaseCommand
 {
-    protected $group       = 'Queue';
-    protected $name        = 'queue:publish';
+    protected $group = 'Queue';
+
+    protected $name = 'queue:publish';
+
     protected $description = 'Publish Queue config file into the current application.';
 
     public function run(array $params): void
@@ -36,7 +38,7 @@ class QueuePublish extends BaseCommand
             $contents = str_replace('namespace Esoftdream\\Queue\\Config', 'namespace Config', $contents);
             $contents = str_replace('use CodeIgniter\\Config\\BaseConfig', 'use Esoftdream\\Queue\\Config\\Queue as BaseQueue', $contents);
             $contents = str_replace('class Queue extends BaseConfig', 'class Queue extends BaseQueue', $contents);
-            $method   = <<<'EOT'
+            $method = <<<'EOT'
 
                     public function __construct()
                     {
@@ -77,6 +79,6 @@ class QueuePublish extends BaseCommand
             file_put_contents($file, $contents);
         }
 
-        CLI::write(CLI::color('  Published! ', 'green') . 'You can customize the configuration by editing the "app/Config/Queue.php" file.');
+        CLI::write(CLI::color('  Published! ', 'green').'You can customize the configuration by editing the "app/Config/Queue.php" file.');
     }
 }

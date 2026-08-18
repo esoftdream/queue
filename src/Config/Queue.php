@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Esoftdream\Queue\Config;
 
 use CodeIgniter\Config\BaseConfig;
-use Esoftdream\Queue\Interfaces\JobInterface;
+use Ttpryg\Queue\Config\QueueConfig;
+use Ttpryg\Queue\Handlers\DatabaseHandler;
+use Ttpryg\Queue\Handlers\SymfonyMessengerHandler;
 
 class Queue extends BaseConfig
 {
     public string $defaultHandler = 'database';
 
     public array $handlers = [
-        'database' => \Esoftdream\Queue\Handlers\DatabaseHandler::class,
-        'symfony' => \Esoftdream\Queue\Handlers\SymfonyMessengerHandler::class,
+        'database' => DatabaseHandler::class,
+        'symfony' => SymfonyMessengerHandler::class,
     ];
 
     public array $sync = [];
@@ -56,9 +58,27 @@ class Queue extends BaseConfig
         }
     }
 
+    public function toQueueConfig(): QueueConfig
+    {
+        return new QueueConfig(
+            defaultHandler: $this->defaultHandler,
+            handlers: $this->handlers,
+            sync: $this->sync,
+            database: $this->database,
+            symfonyMessenger: $this->symfonyMessenger,
+            jobHandlers: $this->jobHandlers,
+            queueDefaultPriority: $this->queueDefaultPriority,
+            queuePriorities: $this->queuePriorities,
+            keepFailedJobs: $this->keepFailedJobs,
+            maxRetries: $this->maxRetries,
+            defaultRetryAfter: $this->defaultRetryAfter,
+            sleepOnFail: $this->sleepOnFail
+        );
+    }
+
     public function resolveJobClass(string $name): string
     {
-        if (!isset($this->jobHandlers[$name])) {
+        if (! isset($this->jobHandlers[$name])) {
             throw new \RuntimeException("Job handler '{$name}' not found.");
         }
 
@@ -67,7 +87,7 @@ class Queue extends BaseConfig
 
     public function getQueuePriorities(string $name): ?string
     {
-        if (!isset($this->queuePriorities[$name])) {
+        if (! isset($this->queuePriorities[$name])) {
             return null;
         }
 

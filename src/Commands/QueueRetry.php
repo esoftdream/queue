@@ -10,12 +10,17 @@ use CodeIgniter\CLI\CLI;
 class QueueRetry extends BaseCommand
 {
     protected $group = 'Queue';
+
     protected $name = 'queue:retry';
+
     protected $description = 'Retry one job or all jobs from failed queues.';
+
     protected $usage = 'queue:retry <id> [options]';
+
     protected $arguments = [
         'id' => 'ID of the failed job or "all" for all failed jobs.',
     ];
+
     protected $options = [
         '-queue' => 'Queue name.',
     ];
