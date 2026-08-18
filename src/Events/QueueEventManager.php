@@ -10,15 +10,24 @@ use Throwable;
 
 class QueueEventManager
 {
-    public const JOB_PUSHED                     = 'queue.job.pushed';
-    public const JOB_PUSH_FAILED                = 'queue.job.push.failed';
-    public const JOB_PROCESSING_STARTED         = 'queue.job.processing.started';
-    public const JOB_PROCESSING_COMPLETED       = 'queue.job.processing.completed';
-    public const JOB_FAILED                     = 'queue.job.failed';
-    public const QUEUE_CLEARED                  = 'queue.cleared';
-    public const WORKER_STARTED                 = 'queue.worker.started';
-    public const WORKER_STOPPED                 = 'queue.worker.stopped';
-    public const HANDLER_CONNECTION_FAILED      = 'queue.handler.connection.failed';
+    public const JOB_PUSHED = 'queue.job.pushed';
+
+    public const JOB_PUSH_FAILED = 'queue.job.push.failed';
+
+    public const JOB_PROCESSING_STARTED = 'queue.job.processing.started';
+
+    public const JOB_PROCESSING_COMPLETED = 'queue.job.processing.completed';
+
+    public const JOB_FAILED = 'queue.job.failed';
+
+    public const QUEUE_CLEARED = 'queue.cleared';
+
+    public const WORKER_STARTED = 'queue.worker.started';
+
+    public const WORKER_STOPPED = 'queue.worker.stopped';
+
+    public const HANDLER_CONNECTION_FAILED = 'queue.handler.connection.failed';
+
     public const HANDLER_CONNECTION_ESTABLISHED = 'queue.handler.connection.established';
 
     public static function jobPushed(
@@ -33,7 +42,7 @@ class QueueEventManager
             queue: $queue,
             metadata: array_merge([
                 'job_class' => $job->payload['job'],
-                'job'       => $job,
+                'job' => $job,
             ], $metadata),
         );
 
@@ -72,7 +81,7 @@ class QueueEventManager
             queue: $queue,
             metadata: array_merge([
                 'job_class' => $job->payload['job'],
-                'job'       => $job,
+                'job' => $job,
             ], $metadata),
         );
 
@@ -91,8 +100,8 @@ class QueueEventManager
             handler: $handler,
             queue: $queue,
             metadata: array_merge([
-                'job_class'       => $job->payload['job'],
-                'job'             => $job,
+                'job_class' => $job->payload['job'],
+                'job' => $job,
                 'processing_time' => $processingTime,
             ], $metadata),
         );
@@ -113,9 +122,9 @@ class QueueEventManager
             handler: $handler,
             queue: $queue,
             metadata: array_merge([
-                'job_class'       => $job->payload['job'],
-                'job'             => $job,
-                'exception'       => $exception,
+                'job_class' => $job->payload['job'],
+                'job' => $job,
+                'exception' => $exception,
                 'processing_time' => $processingTime,
             ], $metadata),
         );
@@ -149,7 +158,7 @@ class QueueEventManager
             queue: $queue,
             metadata: array_merge([
                 'priorities' => $priorities,
-                'config'     => $config,
+                'config' => $config,
             ], $metadata),
         );
 
@@ -169,7 +178,7 @@ class QueueEventManager
             handler: $handler,
             queue: $queue,
             metadata: array_merge([
-                'priorities'     => $priorities,
+                'priorities' => $priorities,
                 'uptime_seconds' => $uptime,
                 'jobs_processed' => $jobsProcessed,
             ], $metadata),
@@ -201,7 +210,7 @@ class QueueEventManager
             handler: $handler,
             metadata: [
                 'exception' => $exception,
-                'config'    => $config,
+                'config' => $config,
             ],
         );
 

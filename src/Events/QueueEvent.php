@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Esoftdream\Queue\Events;
 
-use Psr\Http\Message\UriInterface;
-
 class QueueEvent
 {
     public function __construct(
@@ -13,8 +11,7 @@ class QueueEvent
         public readonly string $handler,
         public readonly ?string $queue = null,
         public readonly array $metadata = [],
-    ) {
-    }
+    ) {}
 
     public function get(string $key, mixed $default = null): mixed
     {

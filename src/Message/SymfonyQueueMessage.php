@@ -4,27 +4,23 @@ declare(strict_types=1);
 
 namespace Esoftdream\Queue\Message;
 
-class SymfonyQueueMessage
+use Ttpryg\Queue\Message\SymfonyQueueMessage as CoreSymfonyQueueMessage;
+
+class SymfonyQueueMessage extends CoreSymfonyQueueMessage
 {
+    public readonly array $metadata;
+
     public function __construct(
-        public readonly string $job,
-        public readonly array $data,
-        public readonly array $metadata = []
+        string $job,
+        array $data = [],
+        array $options = []
     ) {
-    }
-
-    public function getQueue(): string
-    {
-        return $this->metadata['queue'] ?? 'default';
-    }
-
-    public function getPriority(): int
-    {
-        return $this->metadata['priority'] ?? 0;
+        parent::__construct($job, $data, $options);
+        $this->metadata = $options;
     }
 
     public function getAttempts(): int
     {
-        return $this->metadata['attempts'] ?? 0;
+        return $this->options['attempts'] ?? 0;
     }
 }

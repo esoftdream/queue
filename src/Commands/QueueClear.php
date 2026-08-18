@@ -10,9 +10,13 @@ use CodeIgniter\CLI\CLI;
 class QueueClear extends BaseCommand
 {
     protected $group = 'Queue';
+
     protected $name = 'queue:clear';
+
     protected $description = 'Clear all jobs from a given queue.';
+
     protected $usage = 'queue:clear <queueName>';
+
     protected $arguments = [
         'queueName' => 'Name of the queue we will work with.',
     ];

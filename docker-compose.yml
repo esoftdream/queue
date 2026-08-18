@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: queue_ci4_app
+    volumes:
+      - .:/app
+    environment:
+      - ENVIRONMENT=development
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    command: tail -f /dev/null

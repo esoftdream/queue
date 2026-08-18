@@ -1,6 +1,6 @@
 {
     "name": "esoftdream/queue",
-    "description": "Queue system for CodeIgniter 4 with Symfony Messenger backend",
+    "description": "CodeIgniter 4 integration package for Ttpryg Queue Core Engine",
     "license": "MIT",
     "type": "library",
     "keywords": [
@@ -22,15 +22,13 @@
     "homepage": "https://github.com/esoftdream/queue",
     "require": {
         "php": "^8.1",
-        "psr/log": "^1.0|^2.0|^3.0",
-        "symfony/messenger": "^6.0|^7.0",
-        "symfony/event-dispatcher": "^6.0|^7.0"
+        "ttpryg/queue": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.0",
         "phpstan/phpstan": "^1.10",
-        "codeigniter4/framework": "^4.6",
-        "codeigniter4/devkit": "^1.2"
+        "codeigniter4/framework": "^4.6.0,<4.7.0",
+        "laravel/pint": "^1.0"
     },
     "suggest": {
         "symfony/amqp-messenger": "For AMQP transport (RabbitMQ)",
@@ -53,11 +51,12 @@
     "config": {
         "allow-plugins": {
             "phpstan/extension-installer": true
-        }
+        },
+        "policy": false
     },
     "scripts": {
         "test": "phpunit",
-        "cs": "php-cs-fixer fix --ansi --verbose --dry-run --diff",
-        "cs-fix": "php-cs-fixer fix --ansi --verbose --diff"
+        "cs": "vendor/bin/pint --verbose",
+        "cs-fix": "vendor/bin/pint"
     }
 }

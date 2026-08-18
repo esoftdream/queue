@@ -15,25 +15,31 @@ use Throwable;
 class QueueWork extends BaseCommand
 {
     protected $group = 'Queue';
+
     protected $name = 'queue:work';
+
     protected $description = 'Process jobs from a given queue.';
+
     protected $usage = 'queue:work <queueName> [options]';
+
     protected $arguments = [
         'queueName' => 'Name of the queue we will work with.',
     ];
+
     protected $options = [
-        '-sleep'            => 'Wait time between the next check for available job when the queue is empty. Default value: 10 (seconds).',
-        '-rest'             => 'Rest time between the jobs in the queue. Default value: 0 (seconds)',
-        '-max-jobs'         => 'The maximum number of jobs to handle before worker should exit. Disabled by default.',
-        '-max-time'         => 'The maximum number of seconds worker should run. Disabled by default.',
-        '-memory'           => 'The maximum memory in MB that worker can take. Default value: 128',
-        '-priority'         => 'The priority for the jobs from the queue (comma separated). If not provided explicit, will follow the priorities defined in the config via $queuePriorities for the given queue. Disabled by default.',
-        '-tries'            => 'The number of attempts after which the job will be considered as failed. Overrides settings from the Job class. Disabled by default.',
-        '-retry-after'      => 'The number of seconds after which the job is to be restarted in case of failure. Overrides settings from the Job class. Disabled by default.',
+        '-sleep' => 'Wait time between the next check for available job when the queue is empty. Default value: 10 (seconds).',
+        '-rest' => 'Rest time between the jobs in the queue. Default value: 0 (seconds)',
+        '-max-jobs' => 'The maximum number of jobs to handle before worker should exit. Disabled by default.',
+        '-max-time' => 'The maximum number of seconds worker should run. Disabled by default.',
+        '-memory' => 'The maximum memory in MB that worker can take. Default value: 128',
+        '-priority' => 'The priority for the jobs from the queue (comma separated). If not provided explicit, will follow the priorities defined in the config via $queuePriorities for the given queue. Disabled by default.',
+        '-tries' => 'The number of attempts after which the job will be considered as failed. Overrides settings from the Job class. Disabled by default.',
+        '-retry-after' => 'The number of seconds after which the job is to be restarted in case of failure. Overrides settings from the Job class. Disabled by default.',
         '--stop-when-empty' => 'Stop when the queue is empty.',
     ];
 
     private string $workerId;
+
     private bool $running = true;
 
     public function run(array $params)
@@ -78,10 +84,10 @@ class QueueWork extends BaseCommand
         $startTime = microtime(true);
         $this->workerId = sprintf('worker-%s-%d', gethostname(), getmypid());
 
-        CLI::write('Listening for the jobs with the queue: ' . CLI::color($queue, 'light_cyan'), 'cyan');
+        CLI::write('Listening for the jobs with the queue: '.CLI::color($queue, 'light_cyan'), 'cyan');
 
         if ($priority !== 'default') {
-            CLI::write('Jobs will be consumed according to priority: ' . CLI::color($priority, 'light_cyan'), 'cyan');
+            CLI::write('Jobs will be consumed according to priority: '.CLI::color($priority, 'light_cyan'), 'cyan');
         }
 
         CLI::write(PHP_EOL);
@@ -99,11 +105,11 @@ class QueueWork extends BaseCommand
             queue: $queue,
             priorities: $priority,
             config: [
-                'max_jobs'     => $maxJobs,
-                'max_time'     => $maxTime,
-                'memory_limit' => $memory . 'MB',
-                'sleep'        => $sleep,
-                'rest'         => $rest,
+                'max_jobs' => $maxJobs,
+                'max_time' => $maxTime,
+                'memory_limit' => $memory.'MB',
+                'sleep' => $sleep,
+                'rest' => $rest,
             ],
             metadata: [
                 'worker_id' => $this->workerId,
@@ -123,7 +129,7 @@ class QueueWork extends BaseCommand
                 }
 
                 if ($waiting === false) {
-                    CLI::write('No job in the queue. Waiting...' . PHP_EOL, 'yellow');
+                    CLI::write('No job in the queue. Waiting...'.PHP_EOL, 'yellow');
                     $waiting = true;
                 }
 
@@ -187,14 +193,14 @@ class QueueWork extends BaseCommand
     private function readOptions(array $params, QueueConfig $config, string $queue): array
     {
         $options = [
-            'error'      => null,
-            'sleep'      => $params['sleep'] ?? CLI::getOption('sleep') ?? 10,
-            'rest'       => $params['rest'] ?? CLI::getOption('rest') ?? 0,
-            'maxJobs'    => $params['max-jobs'] ?? CLI::getOption('max-jobs') ?? 0,
-            'maxTime'    => $params['max-time'] ?? CLI::getOption('max-time') ?? 0,
-            'memory'     => $params['memory'] ?? CLI::getOption('memory') ?? 128,
-            'priority'   => $params['priority'] ?? CLI::getOption('priority') ?? $config->getQueuePriorities($queue) ?? 'default',
-            'tries'      => $params['tries'] ?? CLI::getOption('tries'),
+            'error' => null,
+            'sleep' => $params['sleep'] ?? CLI::getOption('sleep') ?? 10,
+            'rest' => $params['rest'] ?? CLI::getOption('rest') ?? 0,
+            'maxJobs' => $params['max-jobs'] ?? CLI::getOption('max-jobs') ?? 0,
+            'maxTime' => $params['max-time'] ?? CLI::getOption('max-time') ?? 0,
+            'memory' => $params['memory'] ?? CLI::getOption('memory') ?? 128,
+            'priority' => $params['priority'] ?? CLI::getOption('priority') ?? $config->getQueuePriorities($queue) ?? 'default',
+            'tries' => $params['tries'] ?? CLI::getOption('tries'),
             'retryAfter' => $params['retry-after'] ?? CLI::getOption('retry-after'),
         ];
 
@@ -223,7 +229,7 @@ class QueueWork extends BaseCommand
     {
         timer()->start('work');
         $startTime = microtime(true);
-        $payload   = $work->payload;
+        $payload = $work->payload;
 
         $payloadMetadata = null;
 
@@ -242,7 +248,7 @@ class QueueWork extends BaseCommand
             $this->renewLock($payloadMetadata);
 
             $class = $config->resolveJobClass($payload['job']);
-            $job   = new $class($payload['data']);
+            $job = new $class($payload['data']);
             $job->process();
 
             service('queue')->done($work);
@@ -282,7 +288,7 @@ class QueueWork extends BaseCommand
             $this->clearLock($payloadMetadata);
 
             timer()->stop('work');
-            CLI::write(sprintf('It took: %s sec', timer()->getElapsedTime('work')) . PHP_EOL, 'cyan');
+            CLI::write(sprintf('It took: %s sec', timer()->getElapsedTime('work')).PHP_EOL, 'cyan');
         }
     }
 
@@ -293,8 +299,8 @@ class QueueWork extends BaseCommand
         }
 
         $nextPayload = $payloadMetadata->getChainedJobs()->shift();
-        $priority    = $nextPayload->getPriority();
-        $delay       = $nextPayload->getDelay();
+        $priority = $nextPayload->getPriority();
+        $delay = $nextPayload->getDelay();
 
         if ($priority !== null) {
             service('queue')->setPriority($priority);
@@ -389,10 +395,10 @@ class QueueWork extends BaseCommand
             uptime: $uptime,
             jobsProcessed: $jobsProcessed,
             metadata: [
-                'worker_id'    => $this->workerId,
-                'stop_reason'  => $reason,
+                'worker_id' => $this->workerId,
+                'stop_reason' => $reason,
                 'memory_usage' => memory_get_usage(true),
-                'memory_peak'  => memory_get_peak_usage(true),
+                'memory_peak' => memory_get_peak_usage(true),
             ],
         );
     }
