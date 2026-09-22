@@ -8,14 +8,6 @@
 .gitignore export-ignore
 docker-compose.yml export-ignore
 Dockerfile export-ignore
-Makefile export-ignore
-deptrac.yaml export-ignore
-infection.json.dist export-ignore
-mkdocs.yml export-ignore
-phpstan.neon.dist export-ignore
-phpunit.xml export-ignore
 phpunit.xml.dist export-ignore
-psalm.xml export-ignore
-psalm_autoload.php export-ignore
 rector.php export-ignore
 tests/ export-ignore
