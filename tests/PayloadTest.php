@@ -13,9 +13,9 @@ class PayloadTest extends TestCase
         $metadata = ['queue' => 'high'];
         $payload = new Payload('TestJob', $data, $metadata);
 
-        $this->assertEquals('TestJob', $payload->job);
-        $this->assertEquals($data, $payload->data);
-        $this->assertEquals($metadata, $payload->metadata);
+        $this->assertSame('TestJob', $payload->job);
+        $this->assertSame($data, $payload->data);
+        $this->assertSame($metadata, $payload->metadata);
     }
 
     public function test_from_array_creates_payload(): void
@@ -28,17 +28,17 @@ class PayloadTest extends TestCase
 
         $payload = Payload::fromArray($data);
 
-        $this->assertEquals('MyJob', $payload->job);
-        $this->assertEquals(['id' => 1], $payload->data);
-        $this->assertEquals(['priority' => 10], $payload->metadata);
+        $this->assertSame('MyJob', $payload->job);
+        $this->assertSame(['id' => 1], $payload->data);
+        $this->assertSame(['priority' => 10], $payload->metadata);
     }
 
     public function test_from_array_with_missing_keys(): void
     {
         $payload = Payload::fromArray([]);
 
-        $this->assertEquals('', $payload->job);
-        $this->assertEquals([], $payload->data);
+        $this->assertSame('', $payload->job);
+        $this->assertSame([], $payload->data);
         $this->assertNull($payload->metadata);
     }
 
@@ -47,7 +47,7 @@ class PayloadTest extends TestCase
         $payload = new Payload('JobClass', ['foo' => 'bar'], ['queue' => 'default']);
         $array = $payload->toArray();
 
-        $this->assertEquals([
+        $this->assertSame([
             'job' => 'JobClass',
             'data' => ['foo' => 'bar'],
             'metadata' => ['queue' => 'default'],
@@ -57,20 +57,20 @@ class PayloadTest extends TestCase
     public function test_get_job(): void
     {
         $payload = new Payload('TestJob');
-        $this->assertEquals('TestJob', $payload->getJob());
+        $this->assertSame('TestJob', $payload->getJob());
     }
 
     public function test_get_data(): void
     {
         $payload = new Payload('Job', ['a' => 1, 'b' => 2]);
-        $this->assertEquals(['a' => 1, 'b' => 2], $payload->getData());
+        $this->assertSame(['a' => 1, 'b' => 2], $payload->getData());
     }
 
     public function test_get_metadata(): void
     {
         $metadata = ['key' => 'value'];
         $payload = new Payload('Job', [], $metadata);
-        $this->assertEquals($metadata, $payload->getMetadata());
+        $this->assertSame($metadata, $payload->getMetadata());
     }
 
     public function test_get_metadata_returns_null_when_not_set(): void

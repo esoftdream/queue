@@ -96,8 +96,8 @@ class QueueWork extends BaseCommand
 
         if (function_exists('pcntl_signal')) {
             pcntl_async_signals(true);
-            pcntl_signal(SIGTERM, [$this, 'handleSignal']);
-            pcntl_signal(SIGINT, [$this, 'handleSignal']);
+            pcntl_signal(SIGTERM, $this->handleSignal(...));
+            pcntl_signal(SIGINT, $this->handleSignal(...));
         }
 
         QueueEventManager::workerStarted(

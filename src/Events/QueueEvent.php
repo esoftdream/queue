@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Esoftdream\Queue\Events;
 
+use Throwable;
+
 class QueueEvent
 {
     public function __construct(
@@ -33,7 +35,7 @@ class QueueEvent
         return $this->get('processing_time', 0.0);
     }
 
-    public function getException(): ?\Throwable
+    public function getException(): ?Throwable
     {
         return $this->get('exception');
     }

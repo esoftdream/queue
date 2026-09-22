@@ -15,7 +15,7 @@ class PayloadCollectionTest extends TestCase
         $collection->add(new Payload('Job1'));
         $collection->add(new Payload('Job2'));
 
-        $this->assertEquals(2, $collection->count());
+        $this->assertSame(2, $collection->count());
     }
 
     public function test_shift(): void
@@ -30,7 +30,7 @@ class PayloadCollectionTest extends TestCase
         $shifted = $collection->shift();
 
         $this->assertSame($payload1, $shifted);
-        $this->assertEquals(1, $collection->count());
+        $this->assertSame(1, $collection->count());
     }
 
     public function test_shift_when_empty(): void
@@ -75,9 +75,9 @@ class PayloadCollectionTest extends TestCase
             $collection->add(new Payload("Job{$i}"));
         }
 
-        $this->assertEquals('Job1', $collection->shift()->getJob());
-        $this->assertEquals('Job2', $collection->shift()->getJob());
-        $this->assertEquals('Job3', $collection->shift()->getJob());
+        $this->assertSame('Job1', $collection->shift()->getJob());
+        $this->assertSame('Job2', $collection->shift()->getJob());
+        $this->assertSame('Job3', $collection->shift()->getJob());
         $this->assertTrue($collection->isEmpty());
     }
 }

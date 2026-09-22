@@ -15,7 +15,7 @@ class BaseJobTest extends TestCase
             public function process(): void {}
         };
 
-        $this->assertEquals(60, $job->getRetryAfter());
+        $this->assertSame(60, $job->getRetryAfter());
     }
 
     public function test_get_tries(): void
@@ -25,7 +25,7 @@ class BaseJobTest extends TestCase
             public function process(): void {}
         };
 
-        $this->assertEquals(1, $job->getTries());
+        $this->assertSame(1, $job->getTries());
     }
 
     public function test_get_data(): void
@@ -36,7 +36,7 @@ class BaseJobTest extends TestCase
             public function process(): void {}
         };
 
-        $this->assertEquals($data, $job->getData());
+        $this->assertSame($data, $job->getData());
     }
 
     public function test_set_data(): void
@@ -48,7 +48,7 @@ class BaseJobTest extends TestCase
 
         $job->setData(['new' => 'data']);
 
-        $this->assertEquals(['new' => 'data'], $job->getData());
+        $this->assertSame(['new' => 'data'], $job->getData());
     }
 
     public function test_execute_calls_process(): void
@@ -60,7 +60,7 @@ class BaseJobTest extends TestCase
         $job->execute();
 
         $this->assertTrue($job->processed);
-        $this->assertEquals(['test' => 'data'], $job->handledData);
+        $this->assertSame(['test' => 'data'], $job->handledData);
     }
 
     public function test_constructor_sets_data(): void
@@ -71,7 +71,7 @@ class BaseJobTest extends TestCase
             public function process(): void {}
         };
 
-        $this->assertEquals($data, $job->getData());
+        $this->assertSame($data, $job->getData());
     }
 
     public function test_default_data_is_empty_array(): void
@@ -81,6 +81,6 @@ class BaseJobTest extends TestCase
             public function process(): void {}
         };
 
-        $this->assertEquals([], $job->getData());
+        $this->assertSame([], $job->getData());
     }
 }

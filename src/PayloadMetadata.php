@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Esoftdream\Queue;
 
+use Esoftdream\Queue\Payloads\Payload;
 use Esoftdream\Queue\Payloads\PayloadCollection;
 use JsonSerializable;
 use Ttpryg\Queue\Entities\PayloadMetadata as CorePayloadMetadata;
@@ -11,6 +12,7 @@ use Ttpryg\Queue\Entities\PayloadMetadata as CorePayloadMetadata;
 class PayloadMetadata extends CorePayloadMetadata implements JsonSerializable
 {
     protected array $data = [];
+
     protected ?PayloadCollection $chainedJobs = null;
 
     public function __construct(
@@ -33,9 +35,9 @@ class PayloadMetadata extends CorePayloadMetadata implements JsonSerializable
             );
 
             if (isset($userIdOrData['chainedJobs']) && is_array($userIdOrData['chainedJobs'])) {
-                $collection = new PayloadCollection();
+                $collection = new PayloadCollection;
                 foreach ($userIdOrData['chainedJobs'] as $jobData) {
-                    $collection->add(\Esoftdream\Queue\Payloads\Payload::fromArray($jobData));
+                    $collection->add(Payload::fromArray($jobData));
                 }
                 $this->setChainedJobs($collection);
             }
@@ -53,6 +55,7 @@ class PayloadMetadata extends CorePayloadMetadata implements JsonSerializable
     public function set(string $key, mixed $value): self
     {
         $this->data[$key] = $value;
+
         return $this;
     }
 
@@ -69,12 +72,14 @@ class PayloadMetadata extends CorePayloadMetadata implements JsonSerializable
     public function remove(string $key): self
     {
         unset($this->data[$key]);
+
         return $this;
     }
 
     public function setChainedJobs(?PayloadCollection $chainedJobs): self
     {
         $this->chainedJobs = $chainedJobs;
+
         return $this;
     }
 
@@ -85,7 +90,7 @@ class PayloadMetadata extends CorePayloadMetadata implements JsonSerializable
 
     public function hasChainedJobs(): bool
     {
-        return $this->chainedJobs !== null && !$this->chainedJobs->isEmpty();
+        return $this->chainedJobs !== null && ! $this->chainedJobs->isEmpty();
     }
 
     public function toArray(): array

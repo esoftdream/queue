@@ -6,20 +6,17 @@ use Esoftdream\Queue\PayloadMetadata;
 use Esoftdream\Queue\Payloads\Payload;
 use Esoftdream\Queue\QueuePushResult;
 use Esoftdream\Queue\Tests\Support\TestCase;
+use Throwable;
 
 class SymfonyMessengerHandlerTest extends TestCase
 {
     private object $handler;
 
-    private object $busMock;
-
-    private object $configMock;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->busMock = new class
+        $busMock = new class
         {
             public array $dispatched = [];
 
@@ -44,7 +41,7 @@ class SymfonyMessengerHandlerTest extends TestCase
             }
         };
 
-        $this->configMock = new class
+        $configMock = new class
         {
             public string $transport = 'sync';
 
@@ -53,11 +50,11 @@ class SymfonyMessengerHandlerTest extends TestCase
             public array $symfonyMessengerConfig = [];
         };
 
-        $this->handler = new class($this->busMock, $this->configMock)
+        $this->handler = new class($busMock, $configMock)
         {
             public array $messages = [];
 
-            public ?\Throwable $shouldThrow = null;
+            public ?Throwable $shouldThrow = null;
 
             public function __construct(
                 public object $bus,
@@ -70,7 +67,7 @@ class SymfonyMessengerHandlerTest extends TestCase
                     $this->bus->dispatch($payload);
 
                     return QueuePushResult::success('mock-job-id-'.uniqid());
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     $this->shouldThrow = $e;
 
                     return QueuePushResult::failure($e->getMessage());
@@ -126,6 +123,6 @@ class SymfonyMessengerHandlerTest extends TestCase
     {
         $queue = $this->handler->getQueue();
 
-        $this->assertEquals('default', $queue);
+        $this->assertSame('default', $queue);
     }
 }

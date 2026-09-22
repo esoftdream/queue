@@ -7,6 +7,7 @@ namespace Esoftdream\Queue\Config;
 use Esoftdream\Queue\Database\CodeIgniter4DatabaseAdapter;
 use Esoftdream\Queue\Events\CodeIgniter4EventDispatcher;
 use Psr\Log\LoggerInterface;
+use Throwable;
 use Ttpryg\Queue\Contracts\QueueInterface;
 use Ttpryg\Queue\QueueManager;
 
@@ -69,7 +70,7 @@ class Services
     {
         try {
             return \Config\Services::logger();
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return null;
         }
     }

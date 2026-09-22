@@ -8,13 +8,14 @@ use CodeIgniter\Database\Migration;
 
 class CreateQueueJobsTable extends Migration
 {
-    protected $table = 'queue_jobs';
-
     public function up(): void
     {
+        // Ambil nama tabel secara dinamis dari config Queue
+        $table = config('Queue')->database['table'] ?? 'queue_jobs';
+
         $this->forge->addField([
             'id' => [
-                'type' => 'INT',
+                'type' => 'BIGINT',
                 'unsigned' => true,
                 'auto_increment' => true,
             ],
@@ -31,8 +32,8 @@ class CreateQueueJobsTable extends Migration
                 'type' => 'LONGTEXT',
             ],
             'status' => [
-                'type' => 'ENUM',
-                'constraint' => ['waiting', 'reserved', 'done', 'failed'],
+                'type' => 'VARCHAR',
+                'constraint' => 50,
                 'default' => 'waiting',
             ],
             'priority' => [
@@ -65,7 +66,7 @@ class CreateQueueJobsTable extends Migration
                 'null' => true,
             ],
             'trace' => [
-                'type' => 'TEXT',
+                'type' => 'LONGTEXT',
                 'null' => true,
             ],
             'created_at' => [
@@ -78,14 +79,14 @@ class CreateQueueJobsTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addKey(['queue', 'status']);
-        $this->forge->addKey(['queue', 'available_at']);
+        $this->forge->addKey(['queue', 'status', 'available_at', 'priority'], false, false, 'idx_queue_status_available');
         $this->forge->addKey('reserved_by');
-        $this->forge->createTable($this->table);
+        $this->forge->createTable($table, true);
     }
 
     public function down(): void
     {
-        $this->forge->dropTable($this->table);
+        $table = config('Queue')->database['table'] ?? 'queue_jobs';
+        $this->forge->dropTable($table, true);
     }
 }

@@ -16,18 +16,10 @@ class Registrar
     public static function Services(): array
     {
         return [
-            'queue' => [static function ($getShared = true) {
-                return Services::queue($getShared);
-            }],
-            'queueConfig' => [static function ($getShared = true) {
-                return Services::queueConfig($getShared);
-            }],
-            'queueMessenger' => [static function ($getShared = true) {
-                return Services::messenger($getShared);
-            }],
-            'queueDatabase' => [static function ($getShared = true) {
-                return Services::databaseHandler($getShared);
-            }],
+            'queue' => [static fn ($getShared = true) => Services::queue($getShared)],
+            'queueConfig' => [static fn ($getShared = true) => Services::queueConfig($getShared)],
+            'queueMessenger' => [static fn ($getShared = true) => Services::messenger($getShared)],
+            'queueDatabase' => [static fn ($getShared = true) => Services::databaseHandler($getShared)],
         ];
     }
 }

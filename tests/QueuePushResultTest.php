@@ -12,7 +12,7 @@ class QueuePushResultTest extends TestCase
         $result = QueuePushResult::success('job-123');
 
         $this->assertTrue($result->isSuccess);
-        $this->assertEquals('job-123', $result->jobId);
+        $this->assertSame('job-123', $result->jobId);
         $this->assertNull($result->error);
         $this->assertFalse($result->isFailed());
     }
@@ -23,7 +23,7 @@ class QueuePushResultTest extends TestCase
 
         $this->assertFalse($result->isSuccess);
         $this->assertNull($result->jobId);
-        $this->assertEquals('Connection failed', $result->error);
+        $this->assertSame('Connection failed', $result->error);
         $this->assertTrue($result->isFailed());
     }
 
@@ -32,7 +32,7 @@ class QueuePushResultTest extends TestCase
         $result = QueuePushResult::success(456);
 
         $this->assertTrue($result->isSuccess);
-        $this->assertEquals('456', $result->jobId);
+        $this->assertSame('456', $result->jobId);
     }
 
     public function test_is_failed_returns_correct_status(): void

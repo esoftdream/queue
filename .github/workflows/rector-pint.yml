@@ -15,8 +15,7 @@ on:
 
     paths:
       - '**.php'
-      - '.php-cs-fixer.*'
-      - '.github/workflows/phpcsfixer.yml'
+      - '.github/workflows/rector-pint.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -26,8 +25,8 @@ permissions:
   contents: read
 
 jobs:
-  phpcsfixer:
-    name: PHP-CS-Fixer
+  rector-pint:
+    name: Rector & PHP-CS-Fixer
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
 
@@ -59,4 +58,4 @@ jobs:
         run: composer install --no-progress --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Check code style
-        run: composer cs
+        run: composer fix:check
