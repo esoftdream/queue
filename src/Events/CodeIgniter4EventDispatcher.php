@@ -11,8 +11,8 @@ class CodeIgniter4EventDispatcher implements EventDispatcherInterface
 {
     public function dispatch(object|string $event, array $metadata = []): object
     {
-        $eventName = is_string($event) ? $event : get_class($event);
-        $payload = isset($metadata['event']) ? $metadata['event'] : $event;
+        $eventName = is_string($event) ? $event : $event::class;
+        $payload = $metadata['event'] ?? $event;
 
         Events::trigger($eventName, $payload);
 

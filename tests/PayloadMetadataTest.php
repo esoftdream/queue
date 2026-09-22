@@ -14,7 +14,7 @@ class PayloadMetadataTest extends TestCase
         $data = ['key' => 'value'];
         $metadata = new PayloadMetadata($data);
 
-        $this->assertEquals($data, $metadata->toArray());
+        $this->assertSame($data, $metadata->toArray());
     }
 
     public function test_set_chained_jobs(): void
@@ -56,8 +56,8 @@ class PayloadMetadataTest extends TestCase
         $metadata->set('queue', 'high');
         $metadata->set('priority', 10);
 
-        $this->assertEquals('high', $metadata->get('queue'));
-        $this->assertEquals(10, $metadata->get('priority'));
+        $this->assertSame('high', $metadata->get('queue'));
+        $this->assertSame(10, $metadata->get('priority'));
     }
 
     public function test_get_with_default(): void
@@ -66,7 +66,7 @@ class PayloadMetadataTest extends TestCase
 
         $result = $metadata->get('nonexistent', 'default-value');
 
-        $this->assertEquals('default-value', $result);
+        $this->assertSame('default-value', $result);
     }
 
     public function test_has(): void
@@ -92,7 +92,7 @@ class PayloadMetadataTest extends TestCase
     {
         $metadata = new PayloadMetadata(['a' => 1, 'b' => 2]);
 
-        $this->assertEquals(['a' => 1, 'b' => 2], $metadata->toArray());
+        $this->assertSame(['a' => 1, 'b' => 2], $metadata->toArray());
     }
 
     public function test_json_serialize(): void
@@ -100,7 +100,7 @@ class PayloadMetadataTest extends TestCase
         $metadata = new PayloadMetadata(['x' => 'y']);
         $json = json_encode($metadata);
 
-        $this->assertEquals('{"x":"y"}', $json);
+        $this->assertSame('{"x":"y"}', $json);
     }
 
     public function test_from_array_with_chained_jobs(): void
@@ -115,9 +115,9 @@ class PayloadMetadataTest extends TestCase
 
         $metadata = PayloadMetadata::fromArray($data);
 
-        $this->assertEquals('default', $metadata->get('queue'));
+        $this->assertSame('default', $metadata->get('queue'));
         $this->assertTrue($metadata->hasChainedJobs());
-        $this->assertEquals(2, $metadata->getChainedJobs()->count());
+        $this->assertSame(2, $metadata->getChainedJobs()->count());
     }
 
     public function test_from_array_without_chained_jobs(): void
@@ -125,7 +125,7 @@ class PayloadMetadataTest extends TestCase
         $data = ['key' => 'value'];
         $metadata = PayloadMetadata::fromArray($data);
 
-        $this->assertEquals('value', $metadata->get('key'));
+        $this->assertSame('value', $metadata->get('key'));
         $this->assertFalse($metadata->hasChainedJobs());
     }
 }

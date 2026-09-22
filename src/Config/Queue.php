@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Esoftdream\Queue\Config;
 
 use CodeIgniter\Config\BaseConfig;
+use RuntimeException;
 use Ttpryg\Queue\Config\QueueConfig;
 use Ttpryg\Queue\Handlers\DatabaseHandler;
 use Ttpryg\Queue\Handlers\SymfonyMessengerHandler;
@@ -79,7 +80,7 @@ class Queue extends BaseConfig
     public function resolveJobClass(string $name): string
     {
         if (! isset($this->jobHandlers[$name])) {
-            throw new \RuntimeException("Job handler '{$name}' not found.");
+            throw new RuntimeException("Job handler '{$name}' not found.");
         }
 
         return $this->jobHandlers[$name];

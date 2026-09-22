@@ -6,6 +6,4 @@ namespace Esoftdream\Queue\Payloads;
 
 use Ttpryg\Queue\Payloads\Payload as CorePayload;
 
-class Payload extends CorePayload
-{
-}
+class Payload extends CorePayload {}

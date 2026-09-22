@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Esoftdream\Queue;
 
+use Config\Services;
 use Esoftdream\Queue\Config\Queue as QueueConfig;
 use Esoftdream\Queue\Database\CodeIgniter4DatabaseAdapter;
 use Esoftdream\Queue\Events\CodeIgniter4EventDispatcher;
+use Psr\Log\LoggerInterface;
+use Throwable;
 use Ttpryg\Queue\Contracts\QueueInterface;
 use Ttpryg\Queue\QueueManager;
 
@@ -19,12 +22,12 @@ class Queue
         $db = new CodeIgniter4DatabaseAdapter;
         $events = new CodeIgniter4EventDispatcher;
 
-        /** @var \Psr\Log\LoggerInterface|null $logger */
+        /** @var LoggerInterface|null $logger */
         $logger = null;
         if (class_exists('Config\\Services')) {
             try {
-                $logger = \Config\Services::logger();
-            } catch (\Throwable) {
+                $logger = Services::logger();
+            } catch (Throwable) {
                 $logger = null;
             }
         }

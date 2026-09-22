@@ -32,6 +32,6 @@ class QueuePushResult extends CoreQueuePushResult
 
     public function isFailed(): bool
     {
-        return !$this->isSuccess;
+        return ! $this->isSuccess;
     }
 }

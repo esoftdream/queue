@@ -1,7 +1,7 @@
 {
     "name": "esoftdream/queue",
-    "description": "CodeIgniter 4 integration package for Ttpryg Queue Core Engine",
-    "license": "MIT",
+    "description": "CodeIgniter 4 integration ttpryg/queue (Symfony Messenger) for background job processing.",
+    "license": "proprietary",
     "type": "library",
     "keywords": [
         "codeigniter",
@@ -28,7 +28,8 @@
         "phpunit/phpunit": "^10.0",
         "phpstan/phpstan": "^1.10",
         "codeigniter4/framework": "^4.6.0,<4.7.0",
-        "laravel/pint": "^1.0"
+        "laravel/pint": "^1.0",
+        "rector/rector": "^1.2"
     },
     "suggest": {
         "symfony/amqp-messenger": "For AMQP transport (RabbitMQ)",
@@ -56,7 +57,13 @@
     },
     "scripts": {
         "test": "phpunit",
-        "cs": "vendor/bin/pint --verbose",
-        "cs-fix": "vendor/bin/pint"
+        "fix:check": [
+            "vendor/bin/rector process --dry-run",
+            "vendor/bin/pint --verbose"
+        ],
+        "fix": [
+            "vendor/bin/rector process",
+            "vendor/bin/pint"
+        ]
     }
 }

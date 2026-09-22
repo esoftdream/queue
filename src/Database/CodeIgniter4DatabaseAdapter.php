@@ -34,7 +34,7 @@ class CodeIgniter4DatabaseAdapter implements DatabaseAdapterInterface
             ->where('status', Status::Waiting->value)
             ->where('available_at <=', $now);
 
-        if (! empty($priorities)) {
+        if ($priorities !== []) {
             $builder->whereIn('priority', $priorities);
         }
 
