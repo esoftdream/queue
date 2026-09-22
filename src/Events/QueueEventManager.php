@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Esoftdream\Queue\Events;
 
 use CodeIgniter\Events\Events;
-use Esoftdream\Queue\Entities\QueueJob;
+use Ttpryg\Queue\Entities\QueueJob;
 use Throwable;
 
 class QueueEventManager
