@@ -79,11 +79,15 @@ class Queue extends BaseConfig
 
     public function resolveJobClass(string $name): string
     {
-        if (! isset($this->jobHandlers[$name])) {
-            throw new RuntimeException("Job handler '{$name}' not found.");
+        if (isset($this->jobHandlers[$name])) {
+            return $this->jobHandlers[$name];
         }
 
-        return $this->jobHandlers[$name];
+        if (class_exists($name)) {
+            return $name;
+        }
+
+        throw new RuntimeException("Job handler '{$name}' not found.");
     }
 
     public function getQueuePriorities(string $name): ?string

@@ -7,10 +7,10 @@ namespace Esoftdream\Queue\Commands;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use Esoftdream\Queue\Config\Queue as QueueConfig;
-use Ttpryg\Queue\Entities\QueueJob;
 use Esoftdream\Queue\Events\QueueEventManager;
 use Esoftdream\Queue\PayloadMetadata;
 use Throwable;
+use Ttpryg\Queue\Entities\QueueJob;
 
 class QueueWork extends BaseCommand
 {
