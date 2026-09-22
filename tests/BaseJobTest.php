@@ -3,6 +3,7 @@
 namespace Esoftdream\Queue\Tests;
 
 use Esoftdream\Queue\BaseJob;
+use Esoftdream\Queue\JobInterface;
 use Esoftdream\Queue\Tests\Support\Jobs\TestJob;
 use Esoftdream\Queue\Tests\Support\TestCase;
 
@@ -82,5 +83,16 @@ class BaseJobTest extends TestCase
         };
 
         $this->assertSame([], $job->getData());
+    }
+
+    public function test_legacy_interface_compatibility(): void
+    {
+        $job = new class([]) extends BaseJob implements \Esoftdream\Queue\Interfaces\JobInterface
+        {
+            public function process(): void {}
+        };
+
+        $this->assertInstanceOf(JobInterface::class, $job);
+        $this->assertInstanceOf(\Esoftdream\Queue\Interfaces\JobInterface::class, $job);
     }
 }
