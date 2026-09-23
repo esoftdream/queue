@@ -37,7 +37,6 @@
         "symfony/redis-messenger": "For Redis transport",
         "symfony/uid": "For generating unique message IDs"
     },
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
