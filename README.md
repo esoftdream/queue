@@ -3,7 +3,6 @@
 Queues for the CodeIgniter 4 framework with support for Database and Symfony Messenger backends.
 
 [![PHPUnit](https://github.com/esoftdream/queue/actions/workflows/phpunit.yml/badge.svg)](https://github.com/esoftdream/queue/actions/workflows/phpunit.yml)
-[![PHPStan](https://github.com/esoftdream/queue/actions/workflows/phpstan.yml/badge.svg)](https://github.com/esoftdream/queue/actions/workflows/phpstan.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
 ![PHP](https://img.shields.io/badge/PHP-%5E8.1-blue)
